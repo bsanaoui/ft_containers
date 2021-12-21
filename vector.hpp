@@ -1,5 +1,5 @@
-#ifndef     __VECTOR__HPP__
-#define     __VECTOE__HPP__
+#ifndef  __VECTOR__HPP__
+#define  __VECTOR__HPP__
 
 #include <iostream>
 
@@ -16,7 +16,11 @@ namespace ft
     // *********************************** //   
     class vector
     {
-        
+        vector()
+        {
+            T *t;
+            t = Alloc::allocate(85);
+        }
     };
 } // namespace ft
 
