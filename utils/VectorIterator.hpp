@@ -60,7 +60,7 @@ namespace ft
             return (false);
         }
 
-        
+
 
     }; // class VectorIterator
 } // namespace 'ft'
