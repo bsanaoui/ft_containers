@@ -1,9 +1,9 @@
 NAME = Containers
 
 CC = clang++
-FLAGS = -Werror -Wextra -Wall
+FLAGS = -Werror -Wextra -Wall -std=c++98
 
-SRC = test.cpp
+SRC = ft_containers.cpp
 
 all : $(NAME)
 

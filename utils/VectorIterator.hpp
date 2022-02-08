@@ -38,32 +38,101 @@ namespace ft
         // ============================================== //
         // ======== Constructors && Destructors ========= //
         // ============================================== //
-        VectorIterator() : _ptr(NULL){}
-        VectorIterator(const VectorIterator& vector_iter){ *this = vector_iter}
+        VectorIterator() : _ptr(NULL){} // Default constructor 
+        VectorIterator(pointer ptr) : _ptr(ptr){} // constructor with param
+        VectorIterator(const VectorIterator& vector_iter){ *this = vector_iter; } // // Copy constructor 
+        // ~VectorIterator() { if(this->_ptr) free(this->_ptr); } // Destructor 
 
         // ============================================== //
         // ===========   Member Functions    ============ //
         // ============================================== //
         pointer getPointer(){ return (this->_ptr); }
-
+        void setPointer(pointer ptr){ this->_ptr = ptr; }
         // ============================================== //
         // ===============   Operators    =============== //
         // ============================================== //
-        VectorIterator& operation= (const VectorIterator& vector_iter){
-            this->_ptr = vector_iter.getPointer();
+        VectorIterator& operator= (const VectorIterator& iter){
+            this->_ptr = iter._ptr;
             return (*this);
         }
 
-        bool    operator== (const VectorIterator& vector_iter){
-            if (*(vector_iter.getPointer()) == *(this->_ptr))
+        bool    operator== (const VectorIterator& iter){
+            if (*(iter._ptr) == *(this->_ptr))
                 return (true);
             return (false);
         }
 
+        bool    operator!= (const VectorIterator& iter){
+            if (*(iter._ptr) != *(this->_ptr))
+                return (true);
+            return (false);
+        }
+
+        reference      operator* (){ return (*(this->_ptr)); }
+
+        pointer      operator-> (){ return ((this->_ptr)); }
+
+        VectorIterator& operator++() { //Prefix Incri
+            (this->_ptr)++;
+            return (*this);
+        }
+
+        VectorIterator operator++(int) { //Postfix Incri
+            VectorIterator iter = *this;
+            ++(this->_ptr);
+            return (iter);
+        }
+
+        VectorIterator& operator--() { //Prefix decre
+            (this->_ptr)--;
+            return (*this);
+        }
+
+        VectorIterator operator--(int) { //Postfix decre
+            VectorIterator iter = *this;
+            --(this->_ptr);
+            return (iter);
+        }
+
+        VectorIterator operator+(int n){ //
+            VectorIterator iter = *this;
+            iter._ptr += n;
+            return (iter);
+        }
+
+         VectorIterator operator-(int n){ //
+            VectorIterator iter = *this;
+            iter._ptr -= n;
+            return (iter);
+        }
+
+        difference_type operator-(const VectorIterator& iter){ // Substring two iterator;
+            return (this->_ptr - iter._ptr);
+        }
+
+        
 
 
     }; // class VectorIterator
 } // namespace 'ft'
+
+// ============================================== //
+// ========== Operations Overloading ============ //
+// ============================================== //
+
+template <typename T>
+ft::VectorIterator<T> operator+(int n, const ft::VectorIterator<T> iter){
+            ft::VectorIterator<T> new_iter = iter;
+            new_iter.setPointer(new_iter.getPointer() + n);
+            return (new_iter);
+}
+
+template <typename T>
+ft::VectorIterator<T> operator-(int n, const ft::VectorIterator<T> iter){
+            ft::VectorIterator<T> new_iter = iter;
+            new_iter.setPointer(new_iter.getPointer() - n);
+            return (new_iter);
+}
 
 #endif
 
