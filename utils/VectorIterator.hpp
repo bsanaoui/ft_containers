@@ -10,21 +10,21 @@
 
 namespace ft
 {
+    // **************************************** //
+    // **** Class template Vector Iterator **** //
+    // **************************************** //
     template <typename T>
-    // ******************************* //
-    // **** Class Vector Iterator **** //
-    // ******************************* //
     class VectorIterator : public ft::iterator<std::random_access_iterator_tag, T>
     {
         // ================================== //
         // ========= Member Types =========== //
         // ================================== //
         public:
-        typedef typename ft::iterator<std::random_access_iterator_tag, T>::value_type value_type;
-        typedef typename ft::iterator<std::random_access_iterator_tag, T>::difference_type difference_type;
-        typedef typename ft::iterator<std::random_access_iterator_tag, T>::pointer pointer;
-        typedef typename ft::iterator<std::random_access_iterator_tag, T>::reference reference;
-        typedef typename ft::iterator<std::random_access_iterator_tag, T>::iterator_category iterator_category;
+        typedef typename ft::iterator<std::random_access_iterator_tag, T>::value_type           value_type;
+        typedef typename ft::iterator<std::random_access_iterator_tag, T>::difference_type      difference_type;
+        typedef typename ft::iterator<std::random_access_iterator_tag, T>::pointer              pointer;
+        typedef typename ft::iterator<std::random_access_iterator_tag, T>::reference            reference;
+        typedef typename ft::iterator<std::random_access_iterator_tag, T>::iterator_category    iterator_category;
 
 
         // ============================================== //
@@ -36,7 +36,7 @@ namespace ft
     
         public:
         // ============================================== //
-        // ======== Constructors && Destructors ========= //
+        // ============= Constructors  ================== //
         // ============================================== //
         VectorIterator() : _ptr(NULL){} // Default constructor 
         VectorIterator(pointer ptr) : _ptr(ptr){} // constructor with param
@@ -48,6 +48,7 @@ namespace ft
         // ============================================== //
         pointer getPointer(){ return (this->_ptr); }
         void setPointer(pointer ptr){ this->_ptr = ptr; }
+
         // ============================================== //
         // ===============   Operators    =============== //
         // ============================================== //
@@ -68,9 +69,14 @@ namespace ft
             return (false);
         }
 
-        reference      operator* (){ return (*(this->_ptr)); }
+        reference    operator* (){ return (*(this->_ptr)); }
 
         pointer      operator-> (){ return ((this->_ptr)); }
+
+        value_type   operator*(reference t){
+            *(this->_ptr) = t;
+            return (*(this->_ptr));
+        } 
 
         VectorIterator& operator++() { //Prefix Incri
             (this->_ptr)++;
@@ -110,8 +116,36 @@ namespace ft
             return (this->_ptr - iter._ptr);
         }
 
-        
+        bool            operator<(const VectorIterator& iter){
+            return ( this->_ptr < iter._ptr );
+        }
 
+        bool            operator>(const VectorIterator& iter){
+            return ( this->_ptr > iter._ptr );
+        }
+
+        bool            operator<=(const VectorIterator& iter){
+            return ( !(*this > iter) );
+        }
+
+        bool            operator>=(const VectorIterator& iter){
+            return ( !(*this < iter) );
+        }
+
+        VectorIterator  operator+=(int n){ // Compound assignment operations
+            *this = *this + n;
+            return (*this);
+        }
+
+        VectorIterator  operator-=(int n){ // Compound assignment operations
+            *this = *this - n;
+            return (*this);
+        }
+
+        // Offset dereference operator
+        value_type      operator[](int n){
+            return (this->_ptr[n]);
+        }
 
     }; // class VectorIterator
 } // namespace 'ft'
@@ -122,16 +156,7 @@ namespace ft
 
 template <typename T>
 ft::VectorIterator<T> operator+(int n, const ft::VectorIterator<T> iter){
-            ft::VectorIterator<T> new_iter = iter;
-            new_iter.setPointer(new_iter.getPointer() + n);
-            return (new_iter);
-}
-
-template <typename T>
-ft::VectorIterator<T> operator-(int n, const ft::VectorIterator<T> iter){
-            ft::VectorIterator<T> new_iter = iter;
-            new_iter.setPointer(new_iter.getPointer() - n);
-            return (new_iter);
+    return (iter + n);
 }
 
 #endif
