@@ -7,25 +7,24 @@ int main()
 {
     std::cout << "\n<----------< My ft::Tests >----------->\n" << std::endl;
     {
-        int *ptr = new int[5];
-        int *ptr2 = new int[3];
-
+        int *ptr = new int[3];
         ptr[0] = 1;
         ptr[1] = 2;
         ptr[2] = 3;
-
-        ptr2[0] = -1;
-        ptr2[1] = -2;
-        ptr2[2] = -3;
         
         ft::VectorIterator<int> it(ptr);
-        ft::VectorIterator<int> it2(ptr2);
-        
-        // it = ptr2;
 
-        std::cout << it2 - it << std::endl;
+
+        // it = ptr2;
         std::cout << *it << std::endl;
+
+        std::cout << "\n// ************** < Reverse Iteraror > ************ //\n" << std::endl;
+        ft::reverse_iterator< ft::VectorIterator<int> > rev_it(it);
+        // rev_it -= 1;
+        
+        std::cout << rev_it[2] << std::endl;
     }
+
     std::cout << "\n<--------< Original STD Tests >------->\n" << std::endl;
     {
         std::vector<int> v;

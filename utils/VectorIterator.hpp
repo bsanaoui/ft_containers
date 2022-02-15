@@ -69,7 +69,7 @@ namespace ft
             return (false);
         }
 
-        reference    operator* (){ return (*(this->_ptr)); }
+        reference    operator* () const { return (*(this->_ptr)); }
 
         pointer      operator-> (){ return ((this->_ptr)); }
 
@@ -100,19 +100,19 @@ namespace ft
             return (iter);
         }
 
-        VectorIterator operator+(int n){ //
+        VectorIterator operator+(difference_type n) const{ //
             VectorIterator iter = *this;
             iter._ptr += n;
             return (iter);
         }
 
-         VectorIterator operator-(int n){ //
+         VectorIterator operator-(difference_type n) const { //
             VectorIterator iter = *this;
             iter._ptr -= n;
             return (iter);
         }
 
-        difference_type operator-(const VectorIterator& iter){ // Substring two iterator;
+        difference_type operator-(const VectorIterator& iter) const{ // Substring two iterator;
             return (this->_ptr - iter._ptr);
         }
 
@@ -132,18 +132,18 @@ namespace ft
             return ( !(*this < iter) );
         }
 
-        VectorIterator  operator+=(int n){ // Compound assignment operations
+        VectorIterator&  operator+=(difference_type n){ // Compound assignment operations
             *this = *this + n;
             return (*this);
         }
 
-        VectorIterator  operator-=(int n){ // Compound assignment operations
+        VectorIterator&  operator-=(difference_type n){ // Compound assignment operations
             *this = *this - n;
             return (*this);
         }
 
         // Offset dereference operator
-        value_type      operator[](int n){
+        reference      operator[](difference_type n){
             return (this->_ptr[n]);
         }
 
