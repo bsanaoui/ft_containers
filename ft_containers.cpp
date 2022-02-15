@@ -21,8 +21,8 @@ int main()
         std::cout << "\n// ************** < Reverse Iteraror > ************ //\n" << std::endl;
         ft::reverse_iterator< ft::VectorIterator<int> > rev_it(it);
         // rev_it -= 1;
-        
-        std::cout << rev_it[2] << std::endl;
+        if (rev_it == rev_it)
+            std::cout << rev_it[-1] << std::endl;
     }
 
     std::cout << "\n<--------< Original STD Tests >------->\n" << std::endl;

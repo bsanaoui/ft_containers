@@ -148,16 +148,16 @@ namespace ft
         }
 
     }; // class VectorIterator
+
+    // ============================================== //
+    // ========== Operations Overloading ============ //
+    // ============================================== //
+
+    template <typename T>
+    VectorIterator<T> operator+(int n, const VectorIterator<T> iter){
+        return (iter + n);
+    }
 } // namespace 'ft'
-
-// ============================================== //
-// ========== Operations Overloading ============ //
-// ============================================== //
-
-template <typename T>
-ft::VectorIterator<T> operator+(int n, const ft::VectorIterator<T> iter){
-    return (iter + n);
-}
 
 #endif
 
