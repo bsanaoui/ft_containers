@@ -4,6 +4,9 @@
 #include <iostream>
 #include "utils/VectorIterator.hpp"
 #include "utils/reverse_iterator.hpp"
+#include "type_traits/enable_if.hpp"
+#include "type_traits/is_integral.hpp"
+#include "algorithm/equal.hpp"
 
 // -------------------------- Namespace "ft" -------------------------- //
 namespace ft
@@ -42,16 +45,12 @@ namespace ft
 		size_type	_capacity;
 		Alloc 		_allocator;
 
-	    // ============================================== //
-        // ============= Constructors  ================== //
-        // ============================================== //
+	    // ========================================================== //
+        // ============= Constructors & Destructor ================== //
+        // ========================================================== //
         public:
-        explicit vector (const allocator_type& alloc = allocator_type()){
-			this->_allocator = alloc;
-			this->_arr = this->_allocator.allocate(0);
-			this->_capacity = 0;
-			this->_size = 0;
-		}
+        explicit vector (const allocator_type& alloc = allocator_type())
+			: _allocator(alloc), _arr(_allocator.allocate(0)), _capacity(0), _size(0){}
 
 
         explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()){
@@ -61,29 +60,109 @@ namespace ft
 				this->_allocator.construct(this->_arr + i, val);
 			this->_capacity = n;
 			this->_size = n;
-            std::cout << " constr fill" << std::endl;
 		}
 
-        template <class InputIterator>
+		template <class InputIterator>
         vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
-            typename std::enable_if<!std::is_integral<InputIterator>::value>::type = InputIterator()){
-			// for (size_type i = 0; i < count; i++)
-			// { 
-			// 	/* code */
-			// }
-                std::cout << "Iterator const" << std::endl;
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()){
+				this->_allocator = alloc;
+				this->_arr = this->_allocator.allocate(last - first);
+				for (size_type i = 0; first != last; i++){
+					this->_allocator.construct(this->_arr + i, *(first++));
+					this->_size++;
+					this->_capacity++;
+				}
 		}   
 
-		// vector (const vector& x){
+		vector (const vector& x)
+			: _allocator(x._allocator), _capacity(0), _size(0){
+			*this = x;
+		}
 
-		// }
+		~vector (){
+			for (size_type i = 0; i < this->_size; i++)
+				this->_allocator.destroy(this->_arr + i);
+			this->_capacity = 0;
+			this->_size = 0;
+		}
 
-        // vector()
-        // {
-        //     T *t;
-        //     t = Alloc::allocate(85);
-        // }
-    
+		// ============================================== //
+        // ===============   Operators    =============== //
+        // ============================================== //
+		vector&	operator= (const vector& x){
+			if(!this->_size){
+				this->_arr = this->_allocator.allocate(x.size());
+				this->_size = x.size();
+				this->_capacity = x.size();
+			}
+			for (size_type i = 0; i < x.size(); i++)
+				(*this)[i] = x[i];
+			return (*this);
+		}
+
+		reference	operator[] (size_type n){
+			return (this->_arr[n]);
+		}
+
+		const_reference operator[] (size_type n) const{
+			return (this->_arr[n]);
+		}
+
+		// ============================================== //
+        // ===========   Member Functions    ============ //
+        // ============================================== //
+
+		// ----------------- Iterators: -------------------//
+		iterator begin(){
+			return (iterator(this->_arr));
+		}
+
+		const_iterator begin() const{
+			return (const_iterator(this->_arr));
+		}
+
+		iterator end(){
+			return (iterator(this->_arr + this->_size));
+		}
+
+		const_iterator end() const{
+			return (const_iterator(this->_arr + this->_size));
+		}
+
+		reverse_iterator rbegin(){
+			return (reverse_iterator(this->_arr + this->_size - 1));
+		}
+
+		const_reverse_iterator rbegin() const{
+			return (const_reverse_iterator(this->_arr + this->_size - 1));
+		}
+
+		reverse_iterator rend(){
+			return (reverse_iterator(this->_arr - 1));
+		}
+
+		const_reverse_iterator rend() const{
+			return (const_reverse_iterator(this->_arr - 1));
+		}
+
+		// ----------------- Capacity: -------------------//
+
+		size_type size() const{
+			return (this->_size);
+		}
+
+		size_type max_size() const{
+			return (this->_allocator.max_size());
+		}
+
+		void resize (size_type n, value_type val = value_type()){
+
+		}
+		
+		size_type capicity() const{
+			return (this->_capacity);
+		}
+
     }; // clas tamplate vector
 } // namespace ft
 
