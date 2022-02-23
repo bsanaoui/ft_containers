@@ -156,11 +156,35 @@ namespace ft
 		}
 
 		void resize (size_type n, value_type val = value_type()){
-
+			if (n > this->_capacity){
+				if (n < (this->_capacity * 2))
+					reserve(this->_capacity * 2);
+				else
+					reserve(n);
+			}
+			if (n > this->_size)
+				for (size_type i = this->_size; i < n; i++)
+					this->_allocator.construct(this->_arr + i, val);
+			if (n < this->_size)
+				for (size_type i = n; i < this->_size; i++)
+					this->_allocator.destroy(this->_arr + i);
+			this->_size = n;
 		}
 		
-		size_type capicity() const{
+		size_type capacity() const{
 			return (this->_capacity);
+		}
+
+		void reserve (size_type n){
+			if (n > this->_capacity){
+				pointer		new_arr;
+				new_arr = this->_allocator.allocate(n);
+				for (size_type i = 0; i < this->_size; i++)
+					this->_allocator.construct(new_arr + i, this->_arr[i]);
+				this->_allocator.deallocate(this->_arr, this->_capacity);
+				this->_arr = new_arr;
+				this->_capacity = n;
+			}
 		}
 
     }; // clas tamplate vector
