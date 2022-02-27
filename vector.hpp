@@ -180,11 +180,13 @@ namespace ft
 		}
 
 		void reserve (size_type n){
-			if (n > this->_capacity){
+			if (n > capacity()){
 				pointer		new_arr;
 				new_arr = this->_allocator.allocate(n);
-				for (size_type i = 0; i < this->_size; i++)
+				for (size_type i = 0; i < size(); i++)
 					this->_allocator.construct(new_arr + i, this->_arr[i]);
+				for (size_type i = 0; i < size(); i++)
+					this->_allocator.destroy(this->_arr + i);
 				this->_allocator.deallocate(this->_arr, this->_capacity);
 				this->_arr = new_arr;
 				this->_capacity = n;
@@ -258,26 +260,72 @@ namespace ft
 		//------> Single element
 		iterator insert (iterator position, const value_type& val){
 			difference_type pos = position.getPointer() - this->_arr ; // Posi of elemen
-	
+
 			if (!this->_size)
 				reserve(1);
 			if (this->_size == this->_capacity)
 				reserve(this->_capacity * 2);
 			this->_size++;
-			for (size_type i = size() - 1; i > pos; i--)
+			for (size_type i = size() - 1; i > pos; i--) // to begin complexity
 				this->_allocator.construct(this->_arr + i, (*this)[i - 1]);
 			this->_allocator.construct(this->_arr + pos, val); // insert element
 			return (iterator(this->_arr + pos));
 		}
 
 		//------> Fill
-		// void insert (iterator position, size_type n, const value_type& val){
+		void insert (iterator position, size_type n, const value_type& val){
+			difference_type pos = position.getPointer() - this->_arr ; // Posi of elemen
 
-		// }
+			if (!this->_size)
+				reserve(n);
+			if ((n + size()) > capacity()){
+				if ((n + size()) < (capacity() * 2))
+					reserve(capacity() * 2);
+				else
+					reserve(n + size());
+			}
+			this->_size += n;
+			for (size_type i = size() - 1; i > pos; i--)
+				this->_allocator.construct(this->_arr + i, (*this)[i - n]);
+			for (size_type i = pos; i < n; i++)
+				this->_allocator.construct(this->_arr + i, val); // insert elements
+		}
 
 		//------> Range
-		// template <class InputIterator>
-    	// void insert (iterator position, InputIterator first, InputIterator last){
+		template <class InputIterator>
+    	void insert (iterator position, InputIterator first, InputIterator last,
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()){
+				difference_type pos = position.getPointer() - this->_arr ; // Posi of elemen
+				difference_type n = last - first;
+
+				if (!this->_size)
+					reserve(n);
+				if ((n + size()) > capacity()){
+					if ((n + size()) < (capacity() * 2))
+						reserve(capacity() * 2);
+					else
+						reserve(n + size());
+				}
+				this->_size += n;
+				for (size_type i = size() - 1; i > pos; i--)
+					this->_allocator.construct(this->_arr + i, (*this)[i - n]);
+				for (size_type i = pos; i < n; i++)
+					this->_allocator.construct(this->_arr + i, *(first++)); // insert elements
+		}
+
+		iterator erase (iterator position){
+			difference_type pos = position.getPointer() - this->_arr ; // Posi of element
+
+			this->_size--;
+			this->_allocator.destroy(this->_arr + pos);
+			this->_allocator.construct(this->_arr + pos, val); // insert element
+			for (size_type i = size() - 1; i > pos; i--) // to begin complexity
+				this->_allocator.construct(this->_arr + i, (*this)[i - 1]);
+			return (iterator(this->_arr + pos));
+		}
+
+		// iterator erase (iterator first, iterator last)
+		// {
 
 		// }
 
