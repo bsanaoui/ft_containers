@@ -7,6 +7,7 @@
 #include "type_traits/enable_if.hpp"
 #include "type_traits/is_integral.hpp"
 #include "algorithm/equal.hpp"
+#include "algorithm/lexicographical_compare.hpp"
 
 // -------------------------- Namespace "ft" -------------------------- //
 namespace ft
@@ -346,6 +347,7 @@ namespace ft
 			x = *this;
 			clear();
 			*this = tmp;
+
 		}
 
 		void clear(){
@@ -354,7 +356,57 @@ namespace ft
 			this->_size = 0;
 		}
 
+		allocator_type get_allocator() const{
+			return (Alloc(this->_allocator));
+		}
+
     }; // clas tamplate vector
+
+	// ================================================================== //
+    // ===============   Non-member function overloads    =============== //
+    // ================================================================== //
+
+	template <class T, class Alloc>
+  	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y){
+		vector<T,Alloc> tmp(x);
+		x.clear();
+		x = y;
+		y.clear();
+		y = tmp;
+	}
+
+	// ----------------- > relational operators (vector)
+	template <class T, class Alloc>
+  	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+		  return ((lhs.size() == rhs.size()) && equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
+
+	template <class T, class Alloc>
+	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+		  return (!(lhs == rhs));
+	}
+
+	template <class T, class Alloc>
+	bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+		  return ((lhs.size() == rhs.size()) && lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
+
+	template <class T, class Alloc>
+	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+		  return (!(rhs < lhs));
+	}
+
+	template <class T, class Alloc>
+	bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+		  return (rhs < lhs);
+	}
+
+	template <class T, class Alloc>
+	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
+		  return (!(lhs < rhs));
+	}
+
+	// 
 } // namespace ft
 
 #endif

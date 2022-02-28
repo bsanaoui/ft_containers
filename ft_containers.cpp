@@ -25,6 +25,9 @@ int main()
         for (unsigned i=0; i<bar.size(); i++)
           std::cout << ' ' << bar[i];
         std::cout << '\n';
+        std::cout << "foo | size = " << foo.size() << ", capacity" << foo.capacity() << std::endl;
+        std::cout << "bar | size = " << bar.size() << ", capacity" << bar.capacity() << std::endl;
+
     }
     std::cout << "-------------------------std--------------------------"<<std::endl;
     {
@@ -47,7 +50,8 @@ int main()
         for (unsigned i=0; i<bar.size(); i++)
           std::cout << ' ' << bar[i];
         std::cout << '\n';
+         std::cout << "foo | size = " << foo.size() << ", capacity" << foo.capacity() << std::endl;
+        std::cout << "bar | size = " << bar.size() << ", capacity" << bar.capacity() << std::endl;
     }
-    while(1);
     return (0);                          
 }
