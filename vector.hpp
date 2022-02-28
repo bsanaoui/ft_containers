@@ -55,7 +55,6 @@ namespace ft
 				this->_arr = this->_allocator.allocate(0);
 			}
 
-
         explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()){
 			this->_allocator = alloc;
 			this->_arr = this->_allocator.allocate(n);
@@ -67,10 +66,12 @@ namespace ft
 
 		template <class InputIterator>
         vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
-			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()){
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
+			: _capacity(0), _size(0) {
 				this->_allocator = alloc;
-				this->_capacity = 0;
-				assign(last - first);
+				this->_arr = this->_allocator.allocate(0);
+				// this->_capacity = 0;
+				assign(first, last);
 		}   
 
 		vector (const vector& x)
@@ -79,9 +80,9 @@ namespace ft
 		}
 
 		~vector (){
-			for (size_type i = 0; i < this->_size; i++)
+			for (size_type i = 0; i < size(); i++)
 				this->_allocator.destroy(this->_arr + i);
-			this->_allocator.deallocate(this->_arr, this->_capacity);
+			this->_allocator.deallocate(this->_arr, capacity());
 			this->_capacity = 0;
 			this->_size = 0;
 		}
@@ -292,7 +293,7 @@ namespace ft
 		}
 
 		//------> Range
-		template <class InputIterator>
+		template <class InputIterator> // error if first is not position
     	void insert (iterator position, InputIterator first, InputIterator last,
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()){
 				difference_type pos = position.getPointer() - this->_arr ; // Posi of elemen
@@ -317,17 +318,41 @@ namespace ft
 			difference_type pos = position.getPointer() - this->_arr ; // Posi of element
 
 			this->_size--;
-			this->_allocator.destroy(this->_arr + pos);
-			this->_allocator.construct(this->_arr + pos, val); // insert element
-			for (size_type i = size() - 1; i > pos; i--) // to begin complexity
-				this->_allocator.construct(this->_arr + i, (*this)[i - 1]);
+			this->_allocator.destroy(this->_arr + pos); // delete element
+			for (size_type i = pos; i < size() + 1; i++) // Relocate elements
+				this->_allocator.construct(this->_arr + i, (*this)[i + 1]);
+			this->_allocator.destroy(this->_arr + size());
 			return (iterator(this->_arr + pos));
 		}
 
-		// iterator erase (iterator first, iterator last)
-		// {
+		iterator erase (iterator first, iterator last)
+		{
+			difference_type pos = first.getPointer() - this->_arr ; // Posi of element
+			difference_type n = last - first;
 
-		// }
+			for (size_type i = pos; i < n; i++)			// delete elements
+				this->_allocator.destroy(this->_arr + i); 
+			for (size_type i = pos; i < size(); i++) 	//  Relocate elements
+				this->_allocator.construct(this->_arr + i, (*this)[i + n]);
+			for (size_type i = pos + n; i < size(); i++)	// destroy empty storage;
+				this->_allocator.destroy(this->_arr + i); 
+			this->_size -= n;
+			return (iterator(this->_arr + pos));
+		}
+
+		void swap (vector& x){
+			vector tmp(x);
+			x.clear();
+			x = *this;
+			clear();
+			*this = tmp;
+		}
+
+		void clear(){
+			for (size_type i = 0; i < size(); i++)
+				this->_allocator.destroy(this->_arr + i);
+			this->_size = 0;
+		}
 
     }; // clas tamplate vector
 } // namespace ft

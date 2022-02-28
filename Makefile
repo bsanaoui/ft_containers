@@ -1,8 +1,7 @@
 NAME = Containers
 
 CC = clang++
-FLAGS = -Werror -Wextra -Wall -std=c++98
-
+FLAGS = -Werror -Wextra -Wall -std=c++98 #-g -fsanitize=address
 SRC = ft_containers.cpp
 
 all : $(NAME)
