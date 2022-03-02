@@ -36,9 +36,9 @@ namespace ft {
         // ============================================== //
         // ============= Constructors  ================== //
         // ============================================== //
-        reverse_iterator() : _it(NULL){} // Default constructor
+        reverse_iterator() : _it(Iterator()){} // Default constructor
 
-        explicit reverse_iterator (iterator_type it) : _it(it){} // constructor initialization
+        explicit reverse_iterator (const iterator_type& it) : _it(it){} // constructor initialization
 
         template <class Iter> // // Copy constructor
         reverse_iterator (const reverse_iterator<Iter>& rev_it){
@@ -55,6 +55,13 @@ namespace ft {
         // // ============================================== //
         // // ===============   Operators    =============== //
         // // ============================================== //
+        template <class Iter>
+  	   	reverse_iterator& operator= (const reverse_iterator<Iter>& rev_it)
+		{
+			_it = rev_it.base();
+			return (*this);	  
+		}
+
        reference operator*() const{
            return (*(base() - 1));
        }
@@ -98,17 +105,14 @@ namespace ft {
             this->_it += n;
             return (*this);
        }
-        
-        pointer operator->() const {
+       
+       pointer operator->() const {
            return &(operator*());
         }
 
         reference operator[] (difference_type n) const{
             return (base()[-n-1]);
         }
-
-
-
     }; // class template reverse_iterator
 
     // ============================================== //

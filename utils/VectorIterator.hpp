@@ -53,20 +53,24 @@ namespace ft
         // ===============   Operators    =============== //
         // ============================================== //
         VectorIterator& operator= (const VectorIterator& iter){
-            this->_ptr = iter._ptr;
+            this->_ptr = iter.base();
             return (*this);
         }
 
+        // to asigne  
+        operator VectorIterator<const T>() const {
+			return VectorIterator<const T>(this->_ptr); }
+
+        pointer base() const { return _ptr; }
+
         bool    operator== (const VectorIterator& iter){
-            if (*(iter._ptr) == *(this->_ptr))
+            if (iter._ptr == this->_ptr)
                 return (true);
             return (false);
         }
 
         bool    operator!= (const VectorIterator& iter){
-            if (*(iter._ptr) != *(this->_ptr))
-                return (true);
-            return (false);
+            return (!(*this == iter));
         }
 
         reference    operator* () const { return (*(this->_ptr)); }

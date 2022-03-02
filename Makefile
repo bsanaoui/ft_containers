@@ -1,13 +1,13 @@
 NAME = Containers
 
 CC = clang++
-FLAGS = -Werror -Wextra -Wall #-g -fsanitize=address
-SRC = main.cpp
+FLAGS = -Werror -Wextra -Wall  -std=c++98 #-g -fsanitize=address
+SRC =  vector_tests.cpp
 
 all : $(NAME)
 
 $(NAME) : $(SRC)
-	@$(CC) $(SRC) $(FLAG) -o $(NAME)
+	@$(CC) $(SRC) $(FLAGS) -o $(NAME)
 
 fclean : clean
 	@rm -f $(NAME)
