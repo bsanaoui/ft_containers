@@ -156,7 +156,8 @@ namespace ft
 		}
 
 		size_type max_size() const{
-			return (this->_allocator.max_size());
+			allocator_type alloc;
+			return (alloc.max_size());
 		}
 
 		void resize (size_type n, value_type val = value_type()){
@@ -280,7 +281,8 @@ namespace ft
 
 		//------> Fill
 		void insert (iterator position, size_type n, const value_type& val){
-			difference_type pos = position - begin()  ; // Posi of elemen
+			size_type pos = position - begin()  ; // Posi of elemen
+
 			if (!this->_size)
 				reserve(n);
 			else if ((n + size()) > capacity()){
@@ -289,9 +291,9 @@ namespace ft
 				else
 					reserve(n + size());
 			}
+			for (size_type i = pos; i < size(); i++)
+				this->_allocator.construct(this->_arr + i + n, (*this)[i]);
 			this->_size += n;
-			for (size_type i = size() - 1; i > ((size_type)pos + 1); i--)
-				this->_allocator.construct(this->_arr + i, (*this)[i - n]);
 			for (size_type i = 0; i < n; i++)
 				this->_allocator.construct(this->_arr + pos + i, val); // insert elements
 		}
@@ -303,7 +305,6 @@ namespace ft
 				size_type pos = position - begin(); // Posi of elemen
 				size_type n = last - first;
 
-				// std::cout << "n = " << n << " | pos = " << pos << std::endl;
 				if (!this->_size)
 					reserve(n);
 				else if ((n + size()) > capacity()){
@@ -312,9 +313,9 @@ namespace ft
 					else
 						reserve(n + size());
 				}
+				for (size_type i = pos; i < size(); i++)
+					this->_allocator.construct(this->_arr + i + n, (*this)[i]);
 				this->_size += n;
-				for (size_type i = size() - 1; i > (pos  + 1); i--)
-					this->_allocator.construct(this->_arr + i, (*this)[i - n]);
 				for (size_type i = 0; i < n; i++)
 					this->_allocator.construct(this->_arr + pos + i, *(first++)); // insert elements
 		}
@@ -332,12 +333,13 @@ namespace ft
 
 		iterator erase (iterator first, iterator last)
 		{
-			difference_type pos = first.getPointer() - this->_arr ; // Posi of element
-			difference_type n = last - first;
+			size_type pos = first.getPointer() - this->_arr ; // Posi of element
+			size_type n = last - first;
 
-			for (size_type i = pos; i < (size_type)n; i++)			// delete elements
+			// std::cout << "pos = " << pos << " | n = " << n << std::endl;
+			for (size_type i = pos; i < n; i++)			// delete elements
 				this->_allocator.destroy(this->_arr + i); 
-			for (size_type i = pos; i < size(); i++) 	//  Relocate elements
+			for (size_type i = pos; (i + n) < size() ; i++) 	//  Relocate elements
 				this->_allocator.construct(this->_arr + i, (*this)[i + n]);
 			for (size_type i = pos + n; i < size(); i++)	// destroy empty storage;
 				this->_allocator.destroy(this->_arr + i); 
@@ -346,12 +348,10 @@ namespace ft
 		}
 
 		void swap (vector& x){
-			vector tmp = x;
-			x.clear();
-			x = *this;
-			clear();
-			*this = tmp;
-
+			std::swap(this->_size, x._size);
+			std::swap(this->_arr, x._arr);
+			std::swap(this->_allocator, x._allocator);
+			std::swap(this->_capacity, x._capacity);
 		}			
 
 		void clear(){
@@ -372,11 +372,7 @@ namespace ft
 
 	template <class T, class Alloc>
   	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y){
-		vector<T,Alloc> tmp(x);
-		x.clear();
-		x = y;
-		y.clear();
-		y = tmp;
+		  x.swap(y);
 	}
 
 	// ----------------- > relational operators (vector)
@@ -392,7 +388,7 @@ namespace ft
 
 	template <class T, class Alloc>
 	bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs){
-		  return ((lhs.size() == rhs.size()) && ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		  return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 	}
 
 	template <class T, class Alloc>

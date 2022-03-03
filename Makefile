@@ -2,7 +2,7 @@ NAME = Containers
 
 CC = clang++
 FLAGS = -Werror -Wextra -Wall  -std=c++98 #-g -fsanitize=address
-SRC =  vector_tests.cpp
+SRC =   vector_tests.cpp
 
 all : $(NAME)
 
