@@ -95,12 +95,12 @@ namespace ft
 			clear();
 			this->_allocator.deallocate(this->_arr, _capacity);
 			this->_size = x.size();
-			this->_allocator = x._allocator;
-			this->_arr = this->_allocator.allocate(size());
+			this->_arr = this->_allocator.allocate(x.capacity());
 			this->_capacity = x.capacity();
 		
 			for (size_type i = 0; i < size(); i++)
 				this->_allocator.construct((this->_arr + i), x._arr[i]);
+			this->_allocator = x._allocator;
 			return (*this);
 		}
 
@@ -252,7 +252,8 @@ namespace ft
 		}
 
 		void push_back (const value_type& val){
-			if (!this->_size)
+			// std::cout << _size ;
+			if (!this->_capacity)
 				reserve(1);
 			if (this->_size == this->_capacity)
 				reserve(this->_capacity * 2);
@@ -406,7 +407,6 @@ namespace ft
 		  return (!(lhs < rhs));
 	}
 
-	// 
 } // namespace ft
 
 #endif
