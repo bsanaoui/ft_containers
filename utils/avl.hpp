@@ -9,47 +9,69 @@ namespace ft
 	// **************************************** //
 	// ********* Class template Node ********** //
 	// **************************************** //
-	template <typename key, typename value > 
-	class node
+	template <	class Key,
+				class T,
+				class Compare = std::less<Key>, // deleted after test
+				class Alloc = std::allocator<ft::pair<const Key,T> > // deleted after test
+			> 
+	class Node
 	{
 		// ================================== //
 	    // ========= Member Types =========== //
 		// ================================== //
 	    public:
 
-		typedef ft::pair<key, value>	pair_type;
+		typedef	Key														key_type;
+		typedef T														mapped_type;
+		typedef	Compare													key_compare;
+		typedef ft::pair<const key_type,mapped_type>							value_type;
+		typedef Alloc													allocator_type;
+		typedef	std::allocator<Node<Key, T, Cop> > 	allocator_node_type;
 
 		// ============================================== //
 	    // ========= Member Private Attributs =========== //
 	    // ============================================== //
 	    private:
 
-	    pair_type			item;
-	    node				*left; // The left subtree , keys lesser than node's key
-	    node				*right; // The right subtree , keys greater than node's key
+		//Node elements
+	    value_type			*data;
+	    Node				*left; // The left subtree , keys lesser than node's key
+	    Node				*right; // The right subtree , keys greater than node's key
 	    int                 height;
+		Node				*root; // To store the root adress;
+		
+		//Others elements
+		allocator_type		myAlloc;
+		allocator_node_type	AllocNode;
 
 		public:
 
 	    // ============================================== //
 	    // ============= Constructors  ================== //
 	    // ============================================== //
-	    VectorIterator() : _ptr(NULL){} // Default constructor 
-	    VectorIterator(pointer ptr) : _ptr(ptr){} // constructor with param
-	    VectorIterator(const VectorIterator& vector_iter){ *this = vector_iter; } // // Copy constructor 
+	    Node() : data(NULL), left(NULL), right(NULL), height(0), root(NULL){} // Default constructor
+	
+	    // VectorIterator(pointer ptr) : _ptr(ptr){} // constructor with param
+	    // VectorIterator(const VectorIterator& vector_iter){ *this = vector_iter; } // // Copy constructor 
 	    // ~VectorIterator() { if(this->_ptr) free(this->_ptr); } // Destructor 
 
 	    // ============================================== //
 	    // ===========   Member Functions    ============ //
 	    // ============================================== //
-	    pointer getPointer(){ return (this->_ptr); }
-	    void setPointer(pointer ptr){ this->_ptr = ptr; }
+
+		Node*     newNode(int data){
+		    Node* tmp = AllocNode.allocate(1);
+		    tmp->data = data;
+		    tmp->left = tmp->right = NULL;
+		    tmp->height = 1;
+		    return tmp;
+		}
 
 	    // ============================================== //
 	    // ===============   Operators    =============== //
 	    // ============================================== //
-	    VectorIterator& operator= (const VectorIterator& iter){
-	        this->_ptr = iter.base();
+	    Node& operator= (const Node& node){
+	        
 	        return (*this);
 	    }
 
