@@ -57,7 +57,7 @@ namespace ft
             return (*this);
         }
 
-        // to asigne  
+        // to asigne  vector to const
         operator VectorIterator<const T>() const {
 			return VectorIterator<const T>(this->_ptr); }
 
