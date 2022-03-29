@@ -11,7 +11,6 @@ int main()
         ft::pair<int, float> p1(1, 5.8);
         ft::pair<int, float> p2(2, 10);
         ft::pair<int, float> p3(3, 20);
-        ft::pair<int, float> p4(8, 30);
 
         ft::AvlTree<int, float> *tree = new ft::AvlTree<int, float>();
 
@@ -20,13 +19,10 @@ int main()
         tree->setRoot(tree->insertNode(tree->getRoot(), p3));
 
         // tree->setRoot(tree->deleteNode(tree->getRoot(), p1)); //delete node
-
         // tree->printTree(tree->getRoot(), "", true);
-
-        ft::MapIterator<ft::pair<int, float> > it(tree, tree);
-
-        // *it++;
-        std::cout << (*it++).first << std::endl;
+        
+        ft::MapIterator<int, float> it(tree, tree);
+        std::cout << "Iterator = " <<(*it++).first << std::endl;
 
         // std::cout << tree->getData()->first << std::endl;
         // while(1);
@@ -37,16 +33,14 @@ int main()
         std::pair<int, float> p1(1, 5.8);
         std::pair<int, float> p2(2, 10);
         std::pair<int, float> p3(3, 20);
-        std::pair<int, float> p4(8, 30);
 
         std::map<int, float> map;
         map.insert(p1);
         map.insert(p2);
         map.insert(p3);
-        map.insert(p4);
 
         std::map<int, float>::iterator it = map.begin();
-        std::cout << (*it).first << std::endl;
+        std::cout << "Iterator = " <<(*it).first << std::endl;
     }
 
     std::cout << "------------------------- END TESTs -----------------------"<<std::endl;

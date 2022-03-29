@@ -22,7 +22,7 @@ namespace ft
 		// ========= Member Types =========== //
 		// ================================== //
 	public:
-		typedef Key 									key_type;
+		typedef Key 									 key_type;
 		typedef T 										mapped_type;
 		typedef Compare 								key_compare;
 		typedef Alloc 									allocator_value_type;
@@ -62,7 +62,7 @@ namespace ft
 
 		// ------ Getter && Setters ------ >>
 
-		value_type *getData() const
+		value_type *getData()
 		{
 			return this->_root->data;
 		}
@@ -72,7 +72,7 @@ namespace ft
 			this->_root = root;
 		}
 
-		node_type *getRoot()
+		node_type *getRoot ()
 		{
 			return this->_root;
 		}
