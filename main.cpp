@@ -22,6 +22,9 @@ int main()
         // tree->printTree(tree->getRoot(), "", true);
         
         ft::MapIterator<int, float> it(tree, tree);
+         ft::MapIterator<int, float> it2;
+
+        //  it2 = it;
         std::cout << "Iterator = " <<(*it++).first << std::endl;
 
         // std::cout << tree->getData()->first << std::endl;

@@ -29,7 +29,7 @@ namespace ft{
         // ============================================== //
         private:
         tree_type       *_ptr;
-        tree_type *_root;
+        tree_type       *_root;
 
         public:
 
@@ -52,8 +52,8 @@ namespace ft{
         MapIterator&     operator=(MapIterator const& it){
             if (*this == it)
 				return (*this);
-            this->_ptr = it._ptr;
-            this->_root = it._root;
+            *(this->_ptr) = *(it._ptr);
+            *(this->_root) = *(it._root);
             return *this;
         }
 

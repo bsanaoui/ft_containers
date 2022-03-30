@@ -50,8 +50,9 @@ namespace ft
 		// ============================================== //
 		AvlTree &operator=(const AvlTree &tree)
 		{
-			if (*this == tree)
-				return (*this);
+			// std::cout << "hello";
+			// if (*this == tree)
+			// 	return (*this);
 			this->_root = tree._root;
 			return (*this);
 		}
