@@ -28,8 +28,8 @@ namespace ft{
         // ========= Member Private Attributs =========== //
         // ============================================== //
         private:
-        tree_type       *_ptr;
-        tree_type       *_root;
+        tree_type       _ptr;
+        tree_type       _root;
 
         public:
 
@@ -38,8 +38,9 @@ namespace ft{
         // ============================================== //
         MapIterator(): _ptr(NULL), _root(NULL){}
         
-        MapIterator(tree_type *root, tree_type *ptr): _ptr(ptr), _root(root){}
-        MapIterator(const MapIterator& copy)
+        MapIterator(tree_type *root, tree_type *ptr): _ptr(*ptr), _root(*root){}
+
+        MapIterator(const MapIterator& copy) : _ptr(), _root()
         {
             *this = copy;
         }
@@ -52,29 +53,29 @@ namespace ft{
         MapIterator&     operator=(MapIterator const& it){
             if (*this == it)
 				return (*this);
-            *(this->_ptr) = *(it._ptr);
-            *(this->_root) = *(it._root);
+            this->_ptr = it._ptr;
+            this->_root = it._root;
             return *this;
         }
 
         MapIterator&     operator++(){ // Prefix Incri
-            this->_ptr->setRoot(this->_root->nextNode(this->_ptr->getRoot()));
+            this->_ptr.setRoot(this->_root.nextNode(this->_ptr.getRoot()));
             return *this;
         }
 
         MapIterator      operator++(int){  // Post Incri
-            MapIterator temp = *this;
+            MapIterator temp(*this);
             ++(*this);
             return temp;
         }
 
         MapIterator&     operator--(){
-            this->_ptr->setRoot(this->_root->previousNode(this->_ptr->getRoot()));
+            this->_ptr.setRoot(this->_root.previousNode(this->_ptr.getRoot()));
             return *this;
         }
 
         MapIterator      operator--(int){
-            MapIterator temp = *this;
+            MapIterator temp(*this);
             --(*this);
             return temp;
         }
@@ -88,7 +89,7 @@ namespace ft{
         }
         
         reference        operator*() const{
-            return  *(this->_ptr->getData());
+            return  *(this->_ptr.getData());
         }
 
         reference           operator*(value_type const& t){ // *a = t
@@ -96,7 +97,7 @@ namespace ft{
         }
 
         pointer             operator->() const{
-            return &this->_ptr->key;
+            return this->_ptr.getData();
         }
 
     }; // class template MapIterator

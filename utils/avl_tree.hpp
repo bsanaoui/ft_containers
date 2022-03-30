@@ -50,12 +50,17 @@ namespace ft
 		// ============================================== //
 		AvlTree &operator=(const AvlTree &tree)
 		{
-			// std::cout << "hello";
-			// if (*this == tree)
-			// 	return (*this);
 			this->_root = tree._root;
 			return (*this);
 		}
+
+		bool  operator==(AvlTree const& tree) const{
+      		return this->_root == tree._root;
+    	}
+
+    	bool  operator!=(AvlTree const& tree) const{
+      		return this->_root != tree._root;
+    	}
 
 		// ============================================== //
 		// ===========   Member Functions    ============ //
@@ -63,7 +68,7 @@ namespace ft
 
 		// ------ Getter && Setters ------ >>
 
-		value_type *getData()
+		value_type *getData() const
 		{
 			return this->_root->data;
 		}
@@ -73,7 +78,7 @@ namespace ft
 			this->_root = root;
 		}
 
-		node_type *getRoot ()
+		node_type *getRoot () const
 		{
 			return this->_root;
 		}
