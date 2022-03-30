@@ -2,6 +2,8 @@
 #include "utils/pair.hpp"
 #include "utils/MapIterator.hpp"
 #include <map>
+#include "map.hpp"
+#include "utils/pair.hpp"
 
 
 int main()
@@ -12,7 +14,13 @@ int main()
         ft::pair<int, float> p2(2, 10);
         ft::pair<int, float> p3(3, 20);
 
-        ft::AvlTree<int, float> *tree = new ft::AvlTree<int, float>();
+        ft::map<int, float> map;
+        
+
+
+
+        ft::AvlTree<int, float, std::less<int>, std::allocator<ft::pair<const int, float> > > *tree = 
+        new ft::AvlTree<int, float, std::less<int>, std::allocator<ft::pair<const int, float> > >();
 
         tree->setRoot(tree->insertNode(tree->getRoot(), p1)); // create node
         tree->setRoot(tree->insertNode(tree->getRoot(), p2));
@@ -21,7 +29,7 @@ int main()
         // tree->setRoot(tree->deleteNode(tree->getRoot(), p1)); //delete node
         // tree->printTree(tree->getRoot(), "", true);
         
-        ft::MapIterator<int, float> it(tree, tree);
+        ft::MapIterator<int, float>  it(tree, tree);
         //  ft::MapIterator<int, float> it2;
         std::cout << "Iterator = " << (*it++).first << std::endl;
 

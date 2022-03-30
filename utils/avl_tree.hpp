@@ -13,8 +13,8 @@ namespace ft
 	// ******************************************* //
 	template <	class Key,
 				class T,
-			  	class Compare = std::less<Key>,						// deleted after test
-			  	class Alloc = std::allocator<ft::pair<const Key, T> > // deleted after test
+			  	class Compare,						// deleted after test
+			  	class Alloc // deleted after test
 			  	>
 	class AvlTree
 	{
@@ -30,14 +30,18 @@ namespace ft
 		typedef ft::pair<const key_type, mapped_type> 	value_type;
 		typedef ft::node<value_type> 					node_type;
 		typedef std::allocator<node_type> 				allocator_node_type;
+		typedef size_t                                  size_type;
+
 
 		// ============================================== //
 		// ========= Member Private Attributs =========== //
 		// ============================================== //
-	private:
+	public:
 		node_type 				*_root; // Node elements
+		size_type				_size;  // To work with later
 		allocator_value_type 	_alloc_value;
 		allocator_node_type 	_alloc_node;
+		key_compare				_key_comp;
 
 	public:
 		// ============================================== //

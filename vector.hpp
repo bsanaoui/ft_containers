@@ -365,7 +365,7 @@ namespace ft
 			return (Alloc(this->_allocator));
 		}
 
-    }; // clas tamplate vector
+    }; // class template vector
 
 	// ================================================================== //
     // ===============   Non-member function overloads    =============== //

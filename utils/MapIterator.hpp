@@ -8,9 +8,12 @@ namespace ft{
     // **************************************** //
     // **** Class template Map Iterator **** //
     // **************************************** //
-    template<class Key, class T>
-    class MapIterator : public iterator<std::bidirectional_iterator_tag, ft::pair<Key, T> >{
-
+     template < class Key,                                           // map::key_type
+                class T,                                             // map::mapped_type
+                class Compare = std::less<Key>,                      // map::key_compare
+                class Alloc = std::allocator<ft::pair<const Key,T> > >
+    class MapIterator : public iterator<std::bidirectional_iterator_tag, ft::pair<const Key, T> >
+    {
         // ================================== //
         // ========= Member Types =========== //
         // ================================== //
@@ -21,7 +24,7 @@ namespace ft{
         typedef typename iterator<std::bidirectional_iterator_tag, pair>::pointer               pointer;
         typedef typename iterator<std::bidirectional_iterator_tag, pair>::reference             reference;
         typedef typename iterator<std::bidirectional_iterator_tag, pair>::iterator_category     iterator_category;
-        typedef typename ft::AvlTree <Key, T>    tree_type;     // add template type alloc compare                                                                 
+        typedef typename ft::AvlTree <Key, T, Compare, Alloc>    tree_type;     // add template type alloc compare                                                                 
 
 
         // ============================================== //
