@@ -103,7 +103,6 @@ namespace ft{
         pointer             operator->() const{
             return this->_tree._current->data;
         }
-
     }; // class template MapIterator
 
 } // namespace ft
