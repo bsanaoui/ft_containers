@@ -24,7 +24,7 @@ namespace ft{
         typedef typename iterator<std::bidirectional_iterator_tag, pair>::pointer               pointer;
         typedef typename iterator<std::bidirectional_iterator_tag, pair>::reference             reference;
         typedef typename iterator<std::bidirectional_iterator_tag, pair>::iterator_category     iterator_category;
-        typedef typename ft::AvlTree <Key, T, Compare, Alloc>    tree_type;     // add template type alloc compare                                                                 
+        typedef typename ft::AvlTree <Key, T, Compare, Alloc>                                   tree_type;     // add template type alloc compare                                                                 
 
 
         // ============================================== //
@@ -62,7 +62,7 @@ namespace ft{
         }
 
         MapIterator&     operator++(){ // Prefix Incri
-            this->_ptr.setRoot(this->_root.nextNode(this->_ptr.getRoot()));
+            this->_ptr._root = this->_root.nextNode(this->_ptr._root);
             return *this;
         }
 
@@ -73,7 +73,7 @@ namespace ft{
         }
 
         MapIterator&     operator--(){
-            this->_ptr.setRoot(this->_root.previousNode(this->_ptr.getRoot()));
+            this->_ptr._root = this->_root.previousNode(this->_ptr._root);
             return *this;
         }
 
@@ -92,7 +92,7 @@ namespace ft{
         }
         
         reference        operator*() const{
-            return  *(this->_ptr.getData());
+            return  *(this->_ptr._root->data);
         }
 
         reference           operator*(value_type const& t){ // *a = t
@@ -100,7 +100,7 @@ namespace ft{
         }
 
         pointer             operator->() const{
-            return this->_ptr.getData();
+            return this->_ptr._root->data;
         }
 
     }; // class template MapIterator

@@ -22,9 +22,9 @@ int main()
         ft::AvlTree<int, float, std::less<int>, std::allocator<ft::pair<const int, float> > > *tree = 
         new ft::AvlTree<int, float, std::less<int>, std::allocator<ft::pair<const int, float> > >();
 
-        tree->setRoot(tree->insertNode(tree->getRoot(), p1)); // create node
-        tree->setRoot(tree->insertNode(tree->getRoot(), p2));
-        tree->setRoot(tree->insertNode(tree->getRoot(), p3));
+        tree->_root = tree->insertNode(tree->_root, p1); // create node
+        tree->_root = tree->insertNode(tree->_root, p2); // create node
+        tree->_root = tree->insertNode(tree->_root, p3); // create node
 
         // tree->setRoot(tree->deleteNode(tree->getRoot(), p1)); //delete node
         // tree->printTree(tree->getRoot(), "", true);

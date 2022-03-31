@@ -38,7 +38,6 @@ namespace ft
 		// ============================================== //
 	public:
 		node_type 				*_root; // Node elements
-		size_type				_size;  // To work with later
 		allocator_value_type 	_alloc_value;
 		allocator_node_type 	_alloc_node;
 		key_compare				_key_comp;
@@ -69,25 +68,6 @@ namespace ft
 		// ============================================== //
 		// ===========   Member Functions    ============ //
 		// ============================================== //
-
-		// ------ Getter && Setters ------ >>
-
-		value_type *getData() const
-		{
-			return this->_root->data;
-		}
-
-		void setRoot(node_type *root)
-		{
-			this->_root = root;
-		}
-
-		node_type *getRoot () const
-		{
-			return this->_root;
-		}
-
-		// ------- Member functions ------- >>
 
 		// Calculate height fast
 		int height(node_type *N)

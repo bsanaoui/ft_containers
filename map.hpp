@@ -41,7 +41,7 @@ namespace ft
 		typedef ft::MapIterator<key_type, mapped_type, key_compare, allocator_type>                 iterator;
 		typedef ft::MapIterator<const key_type, const mapped_type, key_compare, allocator_type>     const_iterator;
 		typedef ft::reverse_iterator<iterator>                                                      reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator>                                                    const_reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>                                                const_reverse_iterator;
 		typedef typename ft::iterator_traits<iterator>::difference_type 							difference_type;
 		typedef size_t                                                  							size_type;
 
@@ -53,13 +53,13 @@ namespace ft
 		private:
 		tree_type       _ptr;
         tree_type       _root;
-
+		size_type		_size;
 
 		// ========================================================== //
 		// ============= Constructors & Destructor ================== //
 		// ========================================================== //
 		public:
-		explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _ptr(), _root()
+		explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _ptr(), _root(), _size(0)
 		{
 			this->_ptr._key_comp = this->_root._key_comp = comp;
 			this->_ptr._alloc_value = this->_root._alloc_value = alloc;
