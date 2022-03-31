@@ -6,8 +6,8 @@
 #include "utils/reverse_iterator.hpp"
 #include "utils/iterator_traits.hpp"
 #include "utils/avl_tree.hpp"
-// #include "type_traits/enable_if.hpp"
-// #include "type_traits/is_integral.hpp"
+#include "type_traits/enable_if.hpp"
+#include "type_traits/is_integral.hpp"
 // #include "algorithm/equal.hpp"
 // #include "algorithm/lexicographical_compare.hpp"
 
@@ -30,7 +30,7 @@ namespace ft
 
 		typedef Key                                                                                 key_type;
 		typedef T                                                                                   mapped_type;
-		typedef std::pair<const key_type,mapped_type>                                               value_type;
+		typedef ft::pair<const key_type,mapped_type>                                               value_type;
 		typedef Compare                                                                             key_compare;
 		// typedef         value_compare;                       													// To implement
 		typedef std::allocator<value_type>                                                          allocator_type;
@@ -45,25 +45,46 @@ namespace ft
 		typedef typename ft::iterator_traits<iterator>::difference_type 							difference_type;
 		typedef size_t                                                  							size_type;
 
-		typedef typename ft::AvlTree <key_type, mapped_type, key_compare, allocator_type>    		tree_type;     // add template type alloc compare                                                                 
+		// Custom Tree Type
+		typedef typename ft::AvlTree <key_type, mapped_type, key_compare, allocator_type>    		tree_type;                                                               
 
 		// ============================================== //
 		// ========= Member Private Attributs =========== //
 		// ============================================== //
 		private:
-		tree_type       _ptr;
-        tree_type       _root;
+		tree_type       _tree;
+        // tree_type       _root;
 		size_type		_size;
 
 		// ========================================================== //
 		// ============= Constructors & Destructor ================== //
 		// ========================================================== //
 		public:
-		explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _ptr(), _root(), _size(0)
+		explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) : _size(0)
 		{
-			this->_ptr._key_comp = this->_root._key_comp = comp;
-			this->_ptr._alloc_value = this->_root._alloc_value = alloc;
+			this->_tree._key_comp = comp;
+			this->_tree._alloc_value = alloc;
 		}
+
+		template <class InputIterator>
+		map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type(),
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
+				: _size(0)
+		{
+			this->_tree._key_comp = comp;
+			this->_tree._alloc_value = alloc;
+			while (first != last)
+			{
+				_tree._root = _tree.insertNode(_tree._root, *first++);
+				_size++;
+			}
+		}
+
+
+		// For Test
+		void	display(){this->_tree.printTree(_tree._root, "", true);}
+
+
 
 	}; // class tamplate map
 } // namespace ft

@@ -31,19 +31,21 @@ namespace ft{
         // ========= Member Private Attributs =========== //
         // ============================================== //
         private:
-        tree_type       _ptr;
-        tree_type       _root;
+        tree_type       _tree; //_tree(root_node, current_node);
 
         public:
 
         // ============================================== //
         // ============= Constructors  ================== //
         // ============================================== //
-        MapIterator(): _ptr(NULL), _root(NULL){}
+        MapIterator(): _tree(){}
         
-        MapIterator(tree_type *root, tree_type *ptr): _ptr(*ptr), _root(*root){}
+        MapIterator(tree_type *tree): _tree(*tree)
+        {
+            this->_tree._current = this->_tree.findMin(this->_tree._root);
+        }
 
-        MapIterator(const MapIterator& copy) : _ptr(), _root()
+        MapIterator(const MapIterator& copy) : _tree()
         {
             *this = copy;
         }
@@ -56,13 +58,12 @@ namespace ft{
         MapIterator&     operator=(MapIterator const& it){
             if (*this == it)
 				return (*this);
-            this->_ptr = it._ptr;
-            this->_root = it._root;
+            this->_tree = it._tree;
             return *this;
         }
 
         MapIterator&     operator++(){ // Prefix Incri
-            this->_ptr._root = this->_root.nextNode(this->_ptr._root);
+            this->_tree._current = this->_tree.nextNode(this->_tree._root, this->_tree._current);
             return *this;
         }
 
@@ -73,7 +74,7 @@ namespace ft{
         }
 
         MapIterator&     operator--(){
-            this->_ptr._root = this->_root.previousNode(this->_ptr._root);
+            this->_tree._current = this->_tree.previousNode(this->_tree._root, this->_tree._current);
             return *this;
         }
 
@@ -84,23 +85,23 @@ namespace ft{
         }
 
         bool                operator==(MapIterator const& it) const{
-            return  ((this->_ptr == it._ptr) && (this->_root == it._root));
+            return  (this->_tree == it._tree);
         }
         
         bool                operator!=(MapIterator const& it) const{
-            return  ((this->_ptr != it._ptr) || (this->_root != it._root));
+            return  (this->_tree != it._tree);
         }
         
         reference        operator*() const{
-            return  *(this->_ptr._root->data);
+            return  *(this->_tree._current->data);
         }
 
         reference           operator*(value_type const& t){ // *a = t
-            return (this->_ptr->key = t);
+            return (this->_tree._current->data = t);
         }
 
         pointer             operator->() const{
-            return this->_ptr._root->data;
+            return this->_tree._current->data;
         }
 
     }; // class template MapIterator

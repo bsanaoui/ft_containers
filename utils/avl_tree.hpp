@@ -38,6 +38,7 @@ namespace ft
 		// ============================================== //
 	public:
 		node_type 				*_root; // Node elements
+		node_type 				*_current; // Current elements
 		allocator_value_type 	_alloc_value;
 		allocator_node_type 	_alloc_node;
 		key_compare				_key_comp;
@@ -46,7 +47,7 @@ namespace ft
 		// ============================================== //
 		// ============= Constructors  ================== //
 		// ============================================== //
-		AvlTree() : _root(NULL) {} // Default constructor
+		AvlTree() : _root(NULL) , _current(NULL) {} // Default constructor
 
 		// ============================================== //
 		// ===============   Operators    =============== //
@@ -54,15 +55,16 @@ namespace ft
 		AvlTree &operator=(const AvlTree &tree)
 		{
 			this->_root = tree._root;
+			this->_current = tree._current;
 			return (*this);
 		}
 
 		bool  operator==(AvlTree const& tree) const{
-      		return this->_root == tree._root;
+      		return (this->_root == tree._root && this->_current == tree._current);
     	}
 
     	bool  operator!=(AvlTree const& tree) const{
-      		return this->_root != tree._root;
+      		return (this->_root != tree._root && this->_current != tree._current);
     	}
 
 		// ============================================== //
@@ -242,54 +244,54 @@ namespace ft
 		}
 		
 		// Get next node using inorder successor
-		node_type *nextNode(node_type *x)
+		node_type *nextNode(node_type *root, node_type *x)
 		{
 			node_type *succ = NULL;
-			if (!this->_root)
+			if (!root)
 				return NULL;
 			while (1)
 			{
-				if (_key_comp(x->data->first, this->_root->data->first))
+				if (_key_comp(x->data->first, root->data->first))
 				{
-					succ = this->_root;
-					this->_root = this->_root->left;
+					succ = root;
+					root = root->left;
 				}
-				else if (!_key_comp(x->data->first, this->_root->data->first))
-					this->_root = this->_root->right;
+				else if (!_key_comp(x->data->first, root->data->first))
+					root = root->right;
 				else
 				{
-					if (this->_root->right)
-						succ = findMin(this->_root->right);
+					if (root->right)
+						succ = findMin(root->right);
 					break;
 				}
-				if (!this->_root)
+				if (!root)
 					return succ;
 			}
 			return succ;
 		}
 
 		// Get previous node using inorder successor
-		node_type *previousNode(node_type *x)
+		node_type *previousNode(node_type *root, node_type *x)
 		{
 			node_type *prec = NULL;
-			if (!this->_root)
+			if (!root)
 				return NULL;
 			while (1)
 			{
-				if (_key_comp(x->data->first, this->_root->data->first))
-					this->_root = this->_root->left;
-				else if (!_key_comp(x->data->first, this->_root->data->first))
+				if (_key_comp(x->data->first, root->data->first))
+					root = root->left;
+				else if (!_key_comp(x->data->first, root->data->first))
 				{
-					prec = this->_root;
-					this->_root = this->_root->right;
+					prec = root;
+					root = root->right;
 				}
 				else
 				{
-					if (this->_root->left)
-						prec = findMax(this->_root->left);
+					if (root->left)
+						prec = findMax(root->left);
 					break;
 				}
-				if (!this->_root)
+				if (!root)
 					return prec;
 			}
 			return prec;
