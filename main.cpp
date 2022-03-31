@@ -15,10 +15,7 @@ int main()
         ft::pair<int, float> p3(3, 20);
 
         ft::map<int, float> map;
-        
-
-
-
+    
         ft::AvlTree<int, float, std::less<int>, std::allocator<ft::pair<const int, float> > > *tree = 
         new ft::AvlTree<int, float, std::less<int>, std::allocator<ft::pair<const int, float> > >();
 

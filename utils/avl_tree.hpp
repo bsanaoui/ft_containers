@@ -142,9 +142,9 @@ namespace ft
 			// Find the correct postion and insertNode the node
 			if (node == NULL)
 				return (newNode(val));
-			if (val.first < node->data->first)
+			if (_key_comp(val.first, node->data->first))
 				node->left = insertNode(node->left, val);
-			else if (val.first > node->data->first)
+			else if (!_key_comp(val.first, node->data->first))
 				node->right = insertNode(node->right, val);
 			else
 				return node;
@@ -155,11 +155,11 @@ namespace ft
 			int balanceFactor = getBalanceFactor(node);
 			if (balanceFactor > 1)
 			{
-				if (val.first < node->left->data->first)
+				if (_key_comp(val.first, node->left->data->first))
 				{
 					return rightRotate(node);
 				}
-				else if (val.first > node->left->data->first)
+				else if (!_key_comp(val.first, node->left->data->first))
 				{
 					node->left = leftRotate(node->left);
 					return rightRotate(node);
@@ -167,11 +167,11 @@ namespace ft
 			}
 			if (balanceFactor < -1)
 			{
-				if (val.first > node->right->data->first)
+				if (!_key_comp(val.first, node->right->data->first))
 				{
 					return leftRotate(node);
 				}
-				else if (val.first < node->right->data->first)
+				else if (_key_comp(val.first, node->right->data->first))
 				{
 					node->right = rightRotate(node->right);
 					return leftRotate(node);
@@ -186,9 +186,9 @@ namespace ft
 			// Find the node and delete it
 			if (root == NULL)
 				return root;
-			if (val.first < root->data->first)
+			if (_key_comp(val.first, root->data->first))
 				root->left = deleteNode(root->left, val);
-			else if (val.first > root->data->first)
+			else if (!_key_comp(val.first, root->data->first))
 				root->right = deleteNode(root->right, val);
 			else
 			{
@@ -249,12 +249,12 @@ namespace ft
 				return NULL;
 			while (1)
 			{
-				if (x->data->first < this->_root->data->first)
+				if (_key_comp(x->data->first, this->_root->data->first))
 				{
 					succ = this->_root;
 					this->_root = this->_root->left;
 				}
-				else if (x->data->first > this->_root->data->first)
+				else if (!_key_comp(x->data->first, this->_root->data->first))
 					this->_root = this->_root->right;
 				else
 				{
@@ -276,9 +276,9 @@ namespace ft
 				return NULL;
 			while (1)
 			{
-				if (x->data->first < this->_root->data->first)
+				if (_key_comp(x->data->first, this->_root->data->first))
 					this->_root = this->_root->left;
-				else if (x->data->first > this->_root->data->first)
+				else if (!_key_comp(x->data->first, this->_root->data->first))
 				{
 					prec = this->_root;
 					this->_root = this->_root->right;
