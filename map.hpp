@@ -53,7 +53,6 @@ namespace ft
 		// ============================================== //
 		private:
 		tree_type       _tree;
-        // tree_type       _root;
 		size_type		_size;
 
 		// ========================================================== //
@@ -80,10 +79,91 @@ namespace ft
 			}
 		}
 
+		map (const map& x)
+		{
+			*this = x;
+		}
 
-		// For Test
-		void	display(){this->_tree.printTree(_tree._root, "", true);}
+		// ============================================== //
+        // ===============   Operators    =============== //
+        // ============================================== //
 
+		map&	operator=(map const& x)
+		{
+			this->_tree = x._tree;
+			this->_size = x._size;
+			return (*this);
+		}
+
+		// ------------ Test Methods ---------- //
+		void	display(int i)
+		{	std::cout << "--------------- Map < " << i << " > ---------------- " << std::endl;
+			this->_tree.printTree(_tree._root, "", true);
+		}
+		// -------------- End Test ------------ //
+	
+		// ============================================== //
+        // ===========   Member Functions    ============ //
+        // ============================================== //
+
+		// ----------------- Iterators: ----------------- //
+		iterator begin()
+		{
+			return (iterator(this->_tree._root, this->_tree.findMin(_tree._root)));
+		}
+
+		const_iterator begin() const
+		{
+			return (const_iterator(this->_tree._root, this->_tree.findMin(_tree._root)));
+		}
+
+		iterator end()
+		{
+			return (iterator(this->_tree._root, NULL));
+		}
+
+		const_iterator end() const
+		{
+			return (const_iterator(this->_tree._root, NULL));
+		}
+
+		reverse_iterator rbegin()
+		{
+			return (reverse_iterator(end()));
+		}
+
+		const_reverse_iterator rbegin() const
+		{
+			return (const_reverse_iterator(end()));
+		}
+
+		reverse_iterator rend()
+		{
+			return (reverse_iterator(begin()));
+		}
+
+		const_reverse_iterator rend() const
+		{
+			return (const_reverse_iterator(begin()));
+		}
+
+		// ----------------- Capacity : ------------------ //
+		bool empty() const
+		{
+			return (size() == 0);
+		}
+
+		size_type size() const
+		{
+			return (_size);
+		}
+
+		size_type max_size() const{
+			allocator_type alloc;
+			return (alloc.max_size());
+		}
+
+		// ----------------- Capacity : ------------------ //
 
 
 	}; // class tamplate map

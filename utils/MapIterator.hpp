@@ -24,7 +24,8 @@ namespace ft{
         typedef typename iterator<std::bidirectional_iterator_tag, pair>::pointer               pointer;
         typedef typename iterator<std::bidirectional_iterator_tag, pair>::reference             reference;
         typedef typename iterator<std::bidirectional_iterator_tag, pair>::iterator_category     iterator_category;
-        typedef typename ft::AvlTree <Key, T, Compare, Alloc>                                   tree_type;     // add template type alloc compare                                                                 
+        typedef typename ft::AvlTree <Key, T, Compare, Alloc>                                   tree_type;     // add template type alloc compare  
+        typedef typename ft::AvlTree <Key, T, Compare, Alloc>::node_type                        node_type;                                                             
 
 
         // ============================================== //
@@ -40,9 +41,10 @@ namespace ft{
         // ============================================== //
         MapIterator(): _tree(){}
         
-        MapIterator(tree_type *tree): _tree(*tree)
+        MapIterator(node_type *root, node_type *curr) : _tree()
         {
-            this->_tree._current = this->_tree.findMin(this->_tree._root);
+            this->_tree._root = root;
+            this->_tree._current = curr;
         }
 
         MapIterator(const MapIterator& copy) : _tree()
@@ -55,6 +57,12 @@ namespace ft{
         // ============================================== //
         // ===============   Operators    =============== //
         // ============================================== //
+         // to asigne  vector to const
+        // operator VectorIterator<const T>() const
+        // {
+		// 	return VectorIterator<const T>(this->_ptr);
+        // }
+
         MapIterator&     operator=(MapIterator const& it){
             if (*this == it)
 				return (*this);
@@ -74,7 +82,10 @@ namespace ft{
         }
 
         MapIterator&     operator--(){
-            this->_tree._current = this->_tree.previousNode(this->_tree._root, this->_tree._current);
+            if (!this->_tree._current)
+                this->_tree._current = this->_tree.findMax(_tree._root);
+            else
+                this->_tree._current = this->_tree.previousNode(this->_tree._root, this->_tree._current);
             return *this;
         }
 
@@ -87,7 +98,7 @@ namespace ft{
         bool                operator==(MapIterator const& it) const{
             return  (this->_tree == it._tree);
         }
-        
+    
         bool                operator!=(MapIterator const& it) const{
             return  (this->_tree != it._tree);
         }
@@ -102,6 +113,21 @@ namespace ft{
 
         pointer             operator->() const{
             return this->_tree._current->data;
+        }
+
+        // operators used in reverse Iterator
+        MapIterator operator+(difference_type n) const{ //
+            MapIterator iter = *this;
+            for (size_t i = 0; i < (size_t)n; i++)
+                iter++;
+            return (iter);
+        }
+
+        MapIterator operator-(difference_type n) const { //
+            MapIterator iter = *this;
+            for (size_t i = 0; i < (size_t)n; i++)
+                iter--;
+            return (iter);
         }
     }; // class template MapIterator
 

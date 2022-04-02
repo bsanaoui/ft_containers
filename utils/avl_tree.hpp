@@ -22,7 +22,7 @@ namespace ft
 		// ========= Member Types =========== //
 		// ================================== //
 	public:
-		typedef Key 									 key_type;
+		typedef Key 									key_type;
 		typedef T 										mapped_type;
 		typedef Compare 								key_compare;
 		typedef Alloc 									allocator_value_type;
@@ -49,6 +49,8 @@ namespace ft
 		// ============================================== //
 		AvlTree() : _root(NULL) , _current(NULL) {} // Default constructor
 
+		AvlTree(node_type const &root, node_type const &current) : _root(root), _current(current){}
+
 		// ============================================== //
 		// ===============   Operators    =============== //
 		// ============================================== //
@@ -64,7 +66,7 @@ namespace ft
     	}
 
     	bool  operator!=(AvlTree const& tree) const{
-      		return (this->_root != tree._root && this->_current != tree._current);
+      		return (this->_root != tree._root || this->_current != tree._current);
     	}
 
 		// ============================================== //
@@ -146,7 +148,7 @@ namespace ft
 				return (newNode(val));
 			if (_key_comp(val.first, node->data->first))
 				node->left = insertNode(node->left, val);
-			else if (!_key_comp(val.first, node->data->first))
+			else if (_key_comp(node->data->first, val.first))
 				node->right = insertNode(node->right, val);
 			else
 				return node;
@@ -161,7 +163,7 @@ namespace ft
 				{
 					return rightRotate(node);
 				}
-				else if (!_key_comp(val.first, node->left->data->first))
+				else if (_key_comp(node->left->data->first, val.first))
 				{
 					node->left = leftRotate(node->left);
 					return rightRotate(node);
@@ -169,7 +171,7 @@ namespace ft
 			}
 			if (balanceFactor < -1)
 			{
-				if (!_key_comp(val.first, node->right->data->first))
+				if (_key_comp(node->right->data->first, val.first))
 				{
 					return leftRotate(node);
 				}
@@ -190,7 +192,7 @@ namespace ft
 				return root;
 			if (_key_comp(val.first, root->data->first))
 				root->left = deleteNode(root->left, val);
-			else if (!_key_comp(val.first, root->data->first))
+			else if (_key_comp(root->data->first, val.first))
 				root->right = deleteNode(root->right, val);
 			else
 			{
@@ -256,7 +258,7 @@ namespace ft
 					succ = root;
 					root = root->left;
 				}
-				else if (!_key_comp(x->data->first, root->data->first))
+				else if (_key_comp(root->data->first, x->data->first))
 					root = root->right;
 				else
 				{
@@ -273,6 +275,8 @@ namespace ft
 		// Get previous node using inorder successor
 		node_type *previousNode(node_type *root, node_type *x)
 		{
+			// std::cout<< "root " <<root->data->first<<std::endl;
+			// std::cout<< "x " << x->data->first<<std::endl;
 			node_type *prec = NULL;
 			if (!root)
 				return NULL;
@@ -280,7 +284,7 @@ namespace ft
 			{
 				if (_key_comp(x->data->first, root->data->first))
 					root = root->left;
-				else if (!_key_comp(x->data->first, root->data->first))
+				else if (_key_comp(root->data->first, x->data->first))
 				{
 					prec = root;
 					root = root->right;
@@ -291,8 +295,10 @@ namespace ft
 						prec = findMax(root->left);
 					break;
 				}
-				if (!root)
+				if (!root){
+					// std::cout<< "prec " << prec->data->first<<std::endl;
 					return prec;
+				}
 			}
 			return prec;
 		}
