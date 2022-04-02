@@ -4,7 +4,7 @@
 namespace ft
 {
     template <class T>
-    int max(T a, T b)
+    T max(T a, T b)
 	{
 		return (a > b) ? a : b;
 	}

@@ -69,9 +69,9 @@ namespace ft
       		return (this->_root != tree._root || this->_current != tree._current);
     	}
 
-		// ============================================== //
-		// ===========   Member Functions    ============ //
-		// ============================================== //
+		// ========================================================= //
+		// ===========   Member/ Non Member Functions    ============ //
+		// ========================================================= //
 
 		// Calculate height fast
 		int height(node_type *N)
@@ -303,8 +303,26 @@ namespace ft
 			return prec;
 		}
 
+		static node_type* findNode(node_type *root,  const key_type &key)
+		{
+			if (root)
+			{
+				if (root->data->first == key)
+					return (root);
+				else
+				{
+					node_type *found_node = findNode(root->left, key);
+					if (found_node == NULL)
+						found_node = findNode(root->right, key);
+					return found_node;
+				}
+			}
+			else
+				return (NULL);
+		}
+
 		// Print the balanced tree
-		void printTree(node_type *root, std::string indent, bool last)
+		static void printTree(node_type *root, std::string indent, bool last)
 		{
 			if (root != nullptr)
 			{
@@ -428,23 +446,7 @@ namespace ft
 // }
 // // --- Delete a data and returns the new root
 
-// t_node* findNode(t_node *root, int key)
-// {
-//     if (root)
-//     {
-//         if (root->data == key)
-//             return (root);
-//         else
-//         {
-//             t_node *found_node = findNode(root->left, key);
-//             if (found_node == NULL)
-//                 found_node = findNode(root->right, key);
-//             return found_node;
-//         }
-//     }
-//     else
-//         return (NULL);
-// }
+
 
 // t_node* deleteNode(t_node *root, int data)
 // {

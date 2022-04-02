@@ -5,11 +5,12 @@
 #include "utils/MapIterator.hpp"
 #include "utils/reverse_iterator.hpp"
 #include "utils/iterator_traits.hpp"
-#include "utils/avl_tree.hpp"
+#include "utils/AvlTree.hpp"
 #include "type_traits/enable_if.hpp"
 #include "type_traits/is_integral.hpp"
-// #include "algorithm/equal.hpp"
-// #include "algorithm/lexicographical_compare.hpp"
+#include "utils/pair.hpp"
+#include "utils/make_pair.hpp"
+
 
 // -------------------------- Namespace "ft" -------------------------- //
 namespace ft
@@ -30,7 +31,7 @@ namespace ft
 
 		typedef Key                                                                                 key_type;
 		typedef T                                                                                   mapped_type;
-		typedef ft::pair<const key_type,mapped_type>                                               value_type;
+		typedef ft::pair<const key_type,mapped_type>                                               	value_type;
 		typedef Compare                                                                             key_compare;
 		// typedef         value_compare;                       													// To implement
 		typedef std::allocator<value_type>                                                          allocator_type;
@@ -47,7 +48,7 @@ namespace ft
 
 		// Custom Tree Type
 		typedef typename ft::AvlTree <key_type, mapped_type, key_compare, allocator_type>    		tree_type;                                                               
-
+		typedef typename tree_type::node_type														node_type;						
 		// ============================================== //
 		// ========= Member Private Attributs =========== //
 		// ============================================== //
@@ -74,8 +75,8 @@ namespace ft
 			this->_tree._alloc_value = alloc;
 			while (first != last)
 			{
-				_tree._root = _tree.insertNode(_tree._root, *first++);
-				_size++;
+				this->_tree._root = this->_tree.insertNode(this->_tree._root, *first++);
+				this->_size++;
 			}
 		}
 
@@ -98,7 +99,7 @@ namespace ft
 		// ------------ Test Methods ---------- //
 		void	display(int i)
 		{	std::cout << "--------------- Map < " << i << " > ---------------- " << std::endl;
-			this->_tree.printTree(_tree._root, "", true);
+			tree_type::printTree(_tree._root, "", true);
 		}
 		// -------------- End Test ------------ //
 	
@@ -163,7 +164,38 @@ namespace ft
 			return (alloc.max_size());
 		}
 
-		// ----------------- Capacity : ------------------ //
+		// ----------------- Element access: : ------------------ //
+		mapped_type& operator[] (const key_type& k) // if time complexity use avl insert method
+		{
+			node_type	*found = tree_type::findNode(this->_tree._root, k);
+			if (found)
+				return (found->data->second);
+			this->_tree._root = this->_tree.insertNode(this->_tree._root, ft::make_pair(k, mapped_type()));	 
+			this->_size++;
+			return (tree_type::findNode(this->_tree._root, k))->data->second;
+		}
+
+		// ----------------- Element access: : ------------------ //
+		ft::pair<iterator,bool> insert (const value_type& val)
+		{	
+			// check if key found
+			node_type	*found = tree_type::findNode(this->_tree._root, val.first); 
+			if (found)
+				return (ft::make_pair(iterator(this->_tree._root, found), false)); // false if key already existed
+			// If key not found 
+			this->_tree._root = this->_tree.insertNode(this->_tree._root, val);	 
+			this->_size++;
+			return (ft::make_pair(iterator(this->_tree._root, tree_type::findNode(this->_tree._root, val.first)), true));
+		}
+
+		iterator insert (iterator position, const value_type& val)
+		{
+			(void)position;
+			return(insert(val).second);
+			
+
+		}
+
 
 
 	}; // class tamplate map
