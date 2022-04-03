@@ -104,6 +104,8 @@ namespace ft{
         }
         
         reference        operator*() const{
+            // if (!this->_tree._current)
+            //     return *(new value_type());
             return  *(this->_tree._current->data);
         }
 

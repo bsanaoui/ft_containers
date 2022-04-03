@@ -10,6 +10,7 @@
 #include "type_traits/is_integral.hpp"
 #include "utils/pair.hpp"
 #include "utils/make_pair.hpp"
+#include "vector.hpp"
 
 
 // -------------------------- Namespace "ft" -------------------------- //
@@ -191,12 +192,50 @@ namespace ft
 		iterator insert (iterator position, const value_type& val)
 		{
 			(void)position;
-			return(insert(val).second);
-			
-
+			return(insert(val).first);
 		}
 
+		template <class InputIterator>
+  		void insert (InputIterator first, InputIterator last)
+		{
+			while (first != last)
+			{
+				value_type val = *first;
+				// check if key not found
+				node_type	*found = tree_type::findNode(this->_tree._root, val.first);
+				if (!found)
+				{
+					this->_tree._root = this->_tree.insertNode(this->_tree._root, val);	 
+					this->_size++;
+				}
+				first++;
+			}
+		}
 
+		void erase (iterator position)
+		{
+			this->_tree._root = this->_tree.deleteNode(this->_tree._root, *position);
+			this->_size--;
+		}
+
+		size_type erase (const key_type& k)
+		{
+			node_type	*found = tree_type::findNode(this->_tree._root, k);
+			if (!found)
+				return (0);
+			this->_tree._root = this->_tree.deleteNode(this->_tree._root, *(found->data));
+			this->_size--;
+			return (1);
+		}
+
+		void erase (iterator first, iterator last)
+		{
+			ft::vector<key_type> v; // to store keys to be deleted in a vector
+			while(first != last)
+				v.push_back((*first++).first);
+			for (size_t i = 0; i < v.size(); i++)
+				erase(v[i]);
+		}
 
 	}; // class tamplate map
 } // namespace ft
