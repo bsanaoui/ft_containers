@@ -7,6 +7,7 @@
 #include "type_traits/enable_if.hpp"
 #include "type_traits/is_integral.hpp"
 #include "algorithm/equal.hpp"
+#include "algorithm/swap.hpp"
 #include "algorithm/lexicographical_compare.hpp"
 
 // -------------------------- Namespace "ft" -------------------------- //
@@ -349,10 +350,10 @@ namespace ft
 		}
 
 		void swap (vector& x){
-			std::swap(this->_size, x._size);
-			std::swap(this->_arr, x._arr);
-			std::swap(this->_allocator, x._allocator);
-			std::swap(this->_capacity, x._capacity);
+			ft::swap(this->_size, x._size);
+			ft::swap(this->_arr, x._arr);
+			ft::swap(this->_allocator, x._allocator);
+			ft::swap(this->_capacity, x._capacity);
 		}			
 
 		void clear(){

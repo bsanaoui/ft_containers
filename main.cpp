@@ -54,26 +54,26 @@ int main()
         // display(map3.begin(), map3.end(), 3);
 
         std::cout << "  << ----------------- Erase : ------------ >>" << std::endl;
-        ft::map<char,int> mymap;
+        // ft::map<char,int> mymap;
 
-        // insert some values:
-        mymap['a']=10;
-        mymap['b']=20;
-        mymap['c']=30;
-        mymap['d']=40;
-        mymap['e']=50;
-        mymap['f']=60;
+        // // insert some values:
+        // mymap['a']=10;
+        // mymap['b']=20;
+        // mymap['c']=30;
+        // mymap['d']=40;
+        // mymap['e']=50;
+        // mymap['f']=60;
 
-        ft::map<char, int>::iterator it = mymap.end();
-        mymap.erase ( ++mymap.begin(), --it);    // erasing by range
-        // mymap.erase('a');
-        // mymap.erase('b');
-        // mymap.erase('c');
-        // mymap.erase('d');
-        // mymap.erase('e');
+        // ft::map<char, int>::iterator it = mymap.end();
+        // mymap.erase ( ++mymap.begin(), --it);    // erasing by range
        
-        //show content:
-        display(mymap.begin(), mymap.end(), 1);
+        // //show content:
+        // display(mymap.begin(), mymap.end(), 1);
+
+        std::cout << "  << ----------------- Other : ------------ >>" << std::endl;
+
+        
+
 
     }
     std::cout << "\n|-----------------------------------------------------------|"<<std::endl;
@@ -110,28 +110,28 @@ int main()
         // map3.insert(map2.begin()++, map2.end());
         // display(map3.begin(), map3.end(), 3);
 
-        std::cout << "  << ----------------- Erase : ------------ >>" << std::endl;
+        // std::cout << "  << ----------------- Erase : ------------ >>" << std::endl;
 
-        std::map<char,int> mymap;
+        // std::map<char,int> mymap;
 
-        // insert some values:
-        mymap['a']=10;
-        mymap['b']=20;
-        mymap['c']=30;
-        mymap['d']=40;
-        mymap['e']=50;
-        mymap['f']=60;
+        // // insert some values:
+        // mymap['a']=10;
+        // mymap['b']=20;
+        // mymap['c']=30;
+        // mymap['d']=40;
+        // mymap['e']=50;
+        // mymap['f']=60;
 
-        std::map<char, int>::iterator it = mymap.end();
-    
-        mymap.erase ( ++mymap.begin(), --it);    // erasing by range
-       
-        //show content:
-        display(mymap.begin(), mymap.end(), 1);
+        // std::map<char, int>::iterator it = mymap.end();
+        // mymap.erase ( ++mymap.begin(), --it);    // erasing by range
+   
+        // //show content:
+        // display(mymap.begin(), mymap.end(), 1);
+        std::cout << "  << ----------------- Other : ------------ >>" << std::endl;
+
 
 
     }
-
     std::cout << "\n------------------------- END TESTs -----------------------\n"<<std::endl;
     return (0);                          
 }

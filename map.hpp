@@ -237,6 +237,57 @@ namespace ft
 				erase(v[i]);
 		}
 
+		void swap (map& x)
+		{
+			ft::swap(this->_tree, x._tree);
+			ft::swap(this->_size, x._size);
+		}
+
+		void clear()
+		{
+			erase(begin(), end());
+		}
+
+		// ----------------- Observers : ------------------ //
+		key_compare key_comp() const
+		{
+			return (key_compare(this->_tree._key_comp));
+		}
+
+		// value_compare value_comp() const
+		// {
+		// 	return (value_compare());
+		// }
+
+		// ----------------- Operations : ----------------- //
+		iterator find (const key_type& k)
+		{
+			node_type	*found = tree_type::findNode(this->_tree._root, k);
+			if (found)
+				return (iterator(this->_tree._root, found));
+			return (end());
+		}
+
+		const_iterator find (const key_type& k) const
+		{
+			node_type	*found = tree_type::findNode(this->_tree._root, k);
+			if (found)
+				return (const_iterator(this->_tree._root, found));
+			return (end());
+		}
+
+		size_type count (const key_type& k) const
+		{
+			
+		}
+
+		// ----------------- Allocator : ----------------- //
+		allocator_type get_allocator() const
+		{
+			return(Alloc(this->_tree._alloc_value));
+		}
+
+
 	}; // class tamplate map
 } // namespace ft
 
