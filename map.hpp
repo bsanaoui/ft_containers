@@ -278,9 +278,30 @@ namespace ft
 
 		size_type count (const key_type& k) const
 		{
-			
+			if (tree_type::findNode(this->_tree._root, k))
+				return (1);
+			return (0);
 		}
 
+		iterator lower_bound (const key_type& k)
+		{
+			node_type *first = this->_tree.findMin(this->_tree._root);
+			while (first->data->first < k) // if (key >= first return it) 2 case
+				first = this->_tree.nextNode(this->_tree._root, first);
+			return (iterator(this->_tree._root, first));	
+		}
+
+		// const_iterator lower_bound (const key_type& k) const;
+
+		iterator upper_bound (const key_type& k)
+		{
+			node_type *first = this->_tree.findMin(this->_tree._root);
+			while (  first->data->first <= k) // if (key > first return it) 1 case
+				first = this->_tree.nextNode(this->_tree._root, first);
+			return (iterator(this->_tree._root, first));	
+		}
+
+		// const_iterator upper_bound (const key_type& k) const;
 		// ----------------- Allocator : ----------------- //
 		allocator_type get_allocator() const
 		{
