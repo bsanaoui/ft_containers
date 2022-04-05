@@ -72,23 +72,19 @@ int main()
 
         std::cout << "  << ----------------- Other : ------------ >>" << std::endl;
 
-         ft::map<char,int> mymap;
-        ft::map<char,int>::iterator itlow,itup;
+        ft::map<char,int> foo,bar;
+        foo['a']=100;
+        foo['b']=200;
+        bar['a']=10;
+        bar['z']=1000;
 
-        mymap['a']=20;
-        mymap['b']=40;
-        mymap['c']=60;
-        mymap['d']=80;
-        mymap['e']=100;
-
-        itlow=mymap.lower_bound ('b');  // itlow points to b
-        itup=mymap.upper_bound ('d');   // itup points to e (not d!)
-
-        mymap.erase(itlow,itup);        // erases [itlow,itup)
-
-        // print content:
-        for (ft::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
-            std::cout << it->first << " => " << it->second << '\n';
+        // foo ({{a,100},{b,200}}) vs bar ({a,10},{z,1000}}):
+        if (foo==bar) std::cout << "foo and bar are equal\n";
+        if (foo!=bar) std::cout << "foo and bar are not equal\n";
+        if (foo< bar) std::cout << "foo is less than bar\n";
+        if (foo> bar) std::cout << "foo is greater than bar\n";
+        if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+        if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
 
 
     }
@@ -144,24 +140,21 @@ int main()
         // //show content:
         // display(mymap.begin(), mymap.end(), 1);
         std::cout << "  << ----------------- Other : ------------ >>" << std::endl;
- 
-         std::map<char,int> mymap;
-        std::map<char,int>::iterator itlow,itup;
 
-        mymap['a']=20;
-        mymap['b']=40;
-        mymap['c']=60;
-        mymap['d']=80;
-        mymap['e']=100;
+        std::map<char,int> foo,bar;
+        foo['a']=100;
+        foo['b']=200;
+        bar['a']=10;
+        bar['z']=1000;
 
-        itlow=mymap.lower_bound ('b');  // itlow points to b
-        itup=mymap.upper_bound ('d');   // itup points to e (not d!)
-
-        mymap.erase(itlow,itup);        // erases [itlow,itup)
-
-        // print content:
-        for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
-            std::cout << it->first << " => " << it->second << '\n';
+        // foo ({{a,100},{b,200}}) vs bar ({a,10},{z,1000}}):
+        if (foo==bar) std::cout << "foo and bar are equal\n";
+        if (foo!=bar) std::cout << "foo and bar are not equal\n";
+        if (foo< bar) std::cout << "foo is less than bar\n";
+        if (foo> bar) std::cout << "foo is greater than bar\n";
+        if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+        if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+      
 
 
 

@@ -58,10 +58,10 @@ namespace ft{
         // ===============   Operators    =============== //
         // ============================================== //
          // to asigne  vector to const
-        // operator VectorIterator<const T>() const
-        // {
-		// 	return VectorIterator<const T>(this->_ptr);
-        // }
+        operator MapIterator<const Key, T, Compare, Alloc>() const
+        {
+			return MapIterator<const Key, T, Compare, Alloc>(this->_tree._root, this->_tree._current);
+        }
 
         MapIterator&     operator=(MapIterator const& it){
             if (*this == it)
