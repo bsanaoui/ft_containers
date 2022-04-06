@@ -18,7 +18,7 @@
 # include <unistd.h>
 # include <signal.h>
 # include <sys/time.h>
-# include "vector.hpp"
+# include "../vector.hpp"
 
 
 # define BLUE "\e[0;34m"
@@ -43,7 +43,7 @@ time_t get_time(void)
 #if 1
 void    iterator_tests(void)
 {
-	std::cout << "\033[1;36m<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< vector iterator tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\033[0m\n\n";
+	std::cout << "\033[1;36m<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Vector iterator tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\033[0m\n\n";
 	/*------------ std::vector ---------*/
 	std::vector<int> v(3,4);
 	std::vector<int>::iterator it,it1;
@@ -71,8 +71,8 @@ void    iterator_tests(void)
 	EQUAL((it == it1) == (my_it == my_it1));
 	std::cout << "\033[1;37m[-------------------- [" << std::setw(40) << std::left << " != operator " << "] --------------------]\t\t\033[0m";
 	EQUAL((it != it1) == (my_it != my_it1));
-	std::cout << "\033[1;37m[-------------------- [" << std::setw(40) << std::left << " > operator " << "] --------------------]\t\t\033[0m";
 	EQUAL((it > it1) == (my_it > my_it1));
+	std::cout << "\033[1;37m[-------------------- [" << std::setw(40) << std::left << " > operator " << "] --------------------]\t\t\033[0m";
 	std::cout << "\033[1;37m[-------------------- [" << std::setw(40) << std::left << " >= operator " << "] --------------------]\t\t\033[0m";
 	EQUAL((it >= it1) == (my_it >= my_it1));
 	std::cout << "\033[1;37m[-------------------- [" << std::setw(40) << std::left << " < operator " << "] --------------------]\t\t\033[0m";
@@ -124,7 +124,7 @@ void    iterator_tests(void)
 
 void    const_iterator_tests(void)
 {
-	std::cout << "\033[1;36m<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< vector const_iterator tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\033[0m\n\n";
+	std::cout << "\033[1;36m<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Vector const_iterator tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\033[0m\n\n";
 	/*------------ std::vector ---------*/
 	std::vector<int> v(3,4);
 	std::vector<int>::const_iterator it,it1;
@@ -1190,6 +1190,7 @@ void vector_tests(void)
         {
             (void)e;
             exec_throwed = true;
+
         }
         v1.reserve(100);
         ft_v1.reserve(100);
@@ -1961,6 +1962,11 @@ void vector_tests(void)
                 str += v[i];
             for (size_t i = 0; i < ft_v.size(); ++i)
                 ft_str += ft_v[i];
+
+            // std::cout << std::endl;
+            // std::cout << v.capacity() << std::endl;
+            // std::cout << ft_v.capacity() << std::endl;
+
             cond = (cond && (str == ft_str) && (s == ft_s) && (c == ft_c) && (&(*valid_it) == &(*ft_v.begin())));
         }
         /*---------------------------------------------------------------------------------------------------*/

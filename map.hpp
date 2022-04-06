@@ -11,7 +11,7 @@
 #include "utils/pair.hpp"
 #include "utils/make_pair.hpp"
 #include "vector.hpp"
-#include "utils/value_compare.hpp"
+// #include "utils/value_compare.hpp"
 #include "algorithm/equal.hpp"
 #include "algorithm/lexicographical_compare.hpp"
 
@@ -37,14 +37,24 @@ namespace ft
 		typedef T                                                                                   mapped_type;
 		typedef ft::pair<const key_type,mapped_type>                                               	value_type;
 		typedef Compare                                                                             key_compare;
-		typedef ft::value_compare<value_type, Compare>      										value_compare;
+		typedef	class value_compare : public std::binary_function<value_type, value_type, bool>
+		{
+			friend class map; //?
+			protected:
+				Compare comp;
+  				value_compare (Compare c) : comp(c) {}
+			public:
+				bool operator() (const value_type& x, const value_type& y) const{
+					return comp(x.first, y.first);
+  				}
+		} value_compare;
 		typedef std::allocator<value_type>                                                          allocator_type;
 		typedef typename allocator_type::reference	                                                reference;
 		typedef typename allocator_type::const_reference	                                        const_reference;
 		typedef typename allocator_type::pointer	                                                pointer;
 		typedef typename allocator_type::const_pointer	                                            const_pointer;
 		typedef ft::MapIterator<key_type, mapped_type, key_compare, allocator_type>                 iterator;
-		typedef ft::MapIterator<const key_type, mapped_type, key_compare, allocator_type>     const_iterator;
+		typedef ft::MapIterator<const key_type, mapped_type, key_compare, allocator_type>     		const_iterator;
 		typedef ft::reverse_iterator<iterator>                                                      reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator>                                                const_reverse_iterator;
 		typedef typename ft::iterator_traits<iterator>::difference_type 							difference_type;
@@ -190,6 +200,7 @@ namespace ft
 			this->_tree._root = this->_tree.insertNode(this->_tree._root, val);	 
 			this->_size++;
 			return (ft::make_pair(iterator(this->_tree._root, tree_type::findNode(this->_tree._root, val.first)), true));
+			// return (ft::make_pair(iterator(this->_tree._root, NULL), true));
 		}
 
 		iterator insert (iterator position, const value_type& val)

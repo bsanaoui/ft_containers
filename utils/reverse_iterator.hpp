@@ -63,7 +63,9 @@ namespace ft {
 		}
 
        reference operator*() const{
-           return (*(base() - 1));
+           iterator_type temp = _it;
+           (--temp);
+           return (*temp);
        }
 
        reverse_iterator operator+ (difference_type n) const{

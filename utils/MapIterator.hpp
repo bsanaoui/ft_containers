@@ -95,17 +95,17 @@ namespace ft{
             return temp;
         }
 
-        bool                operator==(MapIterator const& it) const{
-            return  (this->_tree == it._tree);
+        bool                operator==(MapIterator const& it) {
+            if (this->_tree == it._tree)
+                return (true);
+            return (false);
         }
     
-        bool                operator!=(MapIterator const& it) const{
-            return  (this->_tree != it._tree);
+        bool                operator!=(MapIterator const& it) {
+            return (!(*this == it));
         }
         
         reference        operator*() const{
-            // if (!this->_tree._current)
-            //     return *(new value_type());
             return  *(this->_tree._current->data);
         }
 
@@ -132,6 +132,15 @@ namespace ft{
             return (iter);
         }
     }; // class template MapIterator
+
+    // ============================================== //
+    // ========== Operations Overloading ============ //
+    // ============================================== //
+
+    // template <class Key, class T, class Compare, class Alloc>
+    // MapIterator< Key, T, Compare, Alloc> operator+(int n, const MapIterator< Key, T, Compare, Alloc> iter){
+    //     return (iter + n);
+    // }
 
 } // namespace ft
 

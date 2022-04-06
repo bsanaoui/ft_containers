@@ -8,7 +8,7 @@ namespace ft
     template <class value_type, class Compare>
     class value_compare : public std::binary_function<value_type, value_type, bool>
     {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
-        // friend class map;
+        friend class ft::map;
         protected:
             Compare comp;
             value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object

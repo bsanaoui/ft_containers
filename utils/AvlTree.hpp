@@ -246,7 +246,7 @@ namespace ft
 		}
 		
 		// Get next node using inorder successor
-		node_type *nextNode(node_type *root, node_type *x)
+		node_type *nextNode(node_type *root, node_type *x) const
 		{
 			node_type *succ = NULL;
 			if (!root)
@@ -304,6 +304,17 @@ namespace ft
 		}
 
 		static node_type* findNode(node_type *root,  const key_type &key)
+		{
+			if (!root)
+				return NULL;
+			if (key > root->data->first)
+				return (findNodeSide(root->right, key));
+			else if (key < root->data->first)
+				return (findNodeSide(root->left, key));
+			return root;
+		}
+
+		static node_type* findNodeSide(node_type *root,  const key_type &key)
 		{
 			if (root)
 			{
