@@ -1,9 +1,9 @@
 NAME = Containers
 
 CC = clang++
-FLAGS = -Werror -Wextra -Wall  #-std=c++98 -g -fsanitize=address
+FLAGS = -Werror -Wextra -Wall -std=c++98  -g -fsanitize=address
 SRC =   Tests/map_tests.cpp
-# SRC =   main.cpp
+# SRC =   main.czx§§§App
 all : $(NAME)
 
 $(NAME) : $(SRC)

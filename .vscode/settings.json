@@ -67,6 +67,8 @@
         "deque": "cpp",
         "iomanip": "cpp",
         "map": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "numeric": "cpp",
+        "random": "cpp"
     }
 }

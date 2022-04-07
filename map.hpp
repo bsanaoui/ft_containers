@@ -105,6 +105,8 @@ namespace ft
 
 		map&	operator=(map const& x)
 		{
+			this->clear();
+			this->insert(x.begin(), x.end());
 			this->_tree = x._tree;
 			this->_size = x._size;
 			return (*this);
@@ -253,8 +255,8 @@ namespace ft
 
 		void swap (map& x)
 		{
-			ft::swap(this->_tree, x._tree);
-			ft::swap(this->_size, x._size);
+			ft::swap(x, *this);
+			// ft::swap(this->_size, x._size);
 		}
 
 		void clear()
