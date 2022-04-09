@@ -4,6 +4,7 @@
 #include <iostream>
 #include "pair.hpp"
 #include "node.hpp"
+#include "../vector.hpp"
 #include "../algorithm/max.hpp"
 
 namespace ft
@@ -58,6 +59,8 @@ namespace ft
 		{
 			this->_root = tree._root;
 			this->_current = tree._current;
+			// this->_alloc_value = tree._alloc_value;
+			// this->_key_comp = tree._key_comp;
 			return (*this);
 		}
 
@@ -275,8 +278,6 @@ namespace ft
 		// Get previous node using inorder successor
 		node_type *previousNode(node_type *root, node_type *x)
 		{
-			// std::cout<< "root " <<root->data->first<<std::endl;
-			// std::cout<< "x " << x->data->first<<std::endl;
 			node_type *prec = NULL;
 			if (!root)
 				return NULL;
@@ -303,34 +304,33 @@ namespace ft
 			return prec;
 		}
 
-		static node_type* findNode(node_type *root,  const key_type &key)
+		node_type* findNode(node_type *root,  const key_type &key) const 
 		{
 			if (!root)
 				return NULL;
-			if (key > root->data->first)
-				return (findNodeSide(root->right, key));
-			else if (key < root->data->first)
-				return (findNodeSide(root->left, key));
+			if (_key_comp(root->data->first, key))
+				return (findNode(root->right, key));
+			else if (_key_comp(key, root->data->first))
+				return (findNode(root->left, key));
 			return root;
 		}
 
-		static node_type* findNodeSide(node_type *root,  const key_type &key)
+		void  findKeysRange(node_type *root, const key_type &key, node_type **lower, node_type **upper) const
 		{
+
 			if (root)
 			{
-				if (root->data->first == key)
-					return (root);
-				else
-				{
-					node_type *found_node = findNode(root->left, key);
-					if (found_node == NULL)
-						found_node = findNode(root->right, key);
-					return found_node;
-				}
+				if (key <= root->data->first && root->data->first < (*lower)->data->first)
+					*lower = root;
+				if (key < root->data->first && root->data->first < (*upper)->data->first)
+					*upper = root;
+				if (root->data->first <= key)
+					findKeysRange(root->right, key, lower, upper);
+				else if (key <= root->data->first)
+					findKeysRange(root->left, key, lower, upper);
 			}
-			else
-				return (NULL);
 		}
+		
 
 		// Print the balanced tree
 		static void printTree(node_type *root, std::string indent, bool last)
@@ -355,18 +355,6 @@ namespace ft
 		}
 	}; // class template AvlTree
 } // namespace ft
-
-
-
-//  void  inorder(node_type *root)
-//     {
-//       if (root)
-//       {
-//         inorder(root->left);
-//         std::cout << root->data->first << " ";
-//         inorder(root->right);
-//       }
-//     }
 
 //     void  preorder(node_type *root)
 //     {
