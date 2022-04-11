@@ -1,8 +1,7 @@
 NAME = Containers
 
 CC = clang++
-FLAGS = -Werror -Wextra -Wall -std=c++98  #-g -fsanitize=address
-SRC_TEST =   Tests/map_tests.cpp
+FLAGS = -Werror -Wextra -Wall  -std=c++98  #-g -fsanitize=address 
 SRC =   main.cpp
 all : $(NAME)
 
@@ -21,10 +20,14 @@ push :
 	git commit -m "$(m)"
 	git push origin
 
-test : 
-	@$(CC) $(SRC_TEST) $(FLAGS) -o $(NAME)
+map_test :
+	@$(CC) Tests/map_tests.cpp $(FLAGS) -o $(NAME)
 	@./Containers
 
-test_san : 
-	@$(CC) $(SRC_TEST) $(FLAGS) -g -fsanitize=address -o $(NAME)
+vector_test :
+	@$(CC) Tests/vector_tests.cpp $(FLAGS) -o $(NAME)
+	@./Containers
+
+stack_test :
+	@$(CC) Tests/stack_tests.cpp $(FLAGS) -o $(NAME)
 	@./Containers

@@ -48,7 +48,7 @@ namespace ft
 		// ============================================== //
 		// ============= Constructors  ================== //
 		// ============================================== //
-		AvlTree() : _root(NULL) , _current(NULL) {} // Default constructor
+		AvlTree() : _root(nullptr) , _current(nullptr) {} // Default constructor
 
 		AvlTree(node_type const &root, node_type const &current) : _root(root), _current(current){}
 
@@ -62,6 +62,11 @@ namespace ft
 			// this->_alloc_value = tree._alloc_value;
 			// this->_key_comp = tree._key_comp;
 			return (*this);
+		}
+
+		~AvlTree()
+		{
+			// this->_alloc_node.deallocate(this->_root, 1);
 		}
 
 		bool  operator==(AvlTree const& tree) const{
@@ -135,10 +140,10 @@ namespace ft
 		{
 			node_type *ptr;
 			ptr = this->_alloc_node.allocate(1);
-			ptr->data = this->_alloc_value.allocate(1);
-			this->_alloc_value.construct(ptr->data, val);
 			ptr->left = NULL;
 			ptr->right = NULL;
+			ptr->data = this->_alloc_value.allocate(1);
+			this->_alloc_value.construct(ptr->data, val);
 			ptr->height = 1;
 			return ptr;
 		}
@@ -147,7 +152,7 @@ namespace ft
 		node_type *insertNode(node_type *node, const value_type &val)
 		{
 			// Find the correct postion and insertNode the node
-			if (node == NULL)
+			if (node == nullptr)
 				return (newNode(val));
 			if (_key_comp(val.first, node->data->first))
 				node->left = insertNode(node->left, val);
@@ -187,16 +192,15 @@ namespace ft
 			return node;
 		}
 
-		// Delete node from the avl tree
-		node_type *deleteNode(node_type *root, const value_type &val)
+		node_type *deleteNode(node_type *root, const key_type &key) // test
 		{
 			// Find the node and delete it
 			if (root == NULL)
 				return root;
-			if (_key_comp(val.first, root->data->first))
-				root->left = deleteNode(root->left, val);
-			else if (_key_comp(root->data->first, val.first))
-				root->right = deleteNode(root->right, val);
+			if (_key_comp(key, root->data->first))
+				root->left = deleteNode(root->left, key);
+			else if (_key_comp(root->data->first, key))
+				root->right = deleteNode(root->right, key);
 			else
 			{
 				if ((root->left == NULL) || (root->right == NULL))
@@ -205,18 +209,29 @@ namespace ft
 					if (temp == NULL)
 					{
 						temp = root;
-						root = NULL;
+						root = nullptr;
 					}
 					else
-						*root = *temp;
-					// delete temp;
-					this->_alloc_node.destroy(temp);
+					{
+						// *root = *temp;
+						root->right = temp->right;
+						root->left = temp->left;
+						root->height = temp->height;
+						this->_alloc_value.destroy(root->data);
+						this->_alloc_value.construct(root->data, *(temp->data));
+					}
+							
+					this->_alloc_value.deallocate(temp->data, 1);
+					this->_alloc_node.deallocate(temp, 1);
 				}
 				else
 				{
 					node_type *temp = findMin(root->right);
-					root->data = temp->data;
-					root->right = deleteNode(root->right, *temp->data);
+					// root->data = temp->data;
+					this->_alloc_value.destroy(root->data);
+					this->_alloc_value.construct(root->data, *(temp->data));
+
+					root->right = deleteNode(root->right, temp->data->first);
 				}
 			}
 			if (root == NULL)
@@ -247,13 +262,15 @@ namespace ft
 			}
 			return root;
 		}
+
+		
 		
 		// Get next node using inorder successor
 		node_type *nextNode(node_type *root, node_type *x) const
 		{
-			node_type *succ = NULL;
+			node_type *succ = nullptr;
 			if (!root)
-				return NULL;
+				return nullptr;
 			while (1)
 			{
 				if (_key_comp(x->data->first, root->data->first))
@@ -278,9 +295,9 @@ namespace ft
 		// Get previous node using inorder successor
 		node_type *previousNode(node_type *root, node_type *x)
 		{
-			node_type *prec = NULL;
+			node_type *prec = nullptr;
 			if (!root)
-				return NULL;
+				return nullptr;
 			while (1)
 			{
 				if (_key_comp(x->data->first, root->data->first))
@@ -304,7 +321,7 @@ namespace ft
 			return prec;
 		}
 
-		node_type* findNode(node_type *root,  const key_type &key) const 
+		node_type* findNode(node_type *root,  const key_type &key) const
 		{
 			if (!root)
 				return NULL;
@@ -312,6 +329,7 @@ namespace ft
 				return (findNode(root->right, key));
 			else if (_key_comp(key, root->data->first))
 				return (findNode(root->left, key));
+		
 			return root;
 		}
 
@@ -376,281 +394,5 @@ namespace ft
 //       }
 //     }
 
-// t_node*     insertNode(t_node* node, int data)
-// {
-//     // Find the correct postion and insertNode the node
-//   if (node == NULL)
-//     return (newNode(data));
-//   if (data < node->data)
-//     node->left = insertNode(node->left, data);
-//   else if (data > node->data)
-//     node->right = insertNode(node->right, data);
-//   else
-//     return node;
-
-//   // Update the balance factor of each node and
-//   // balance the tree
-//   node->height = 1 + std::ft::max(height(node->left),
-//                height(node->right));
-//   int balanceFactor = getBalanceFactor(node);
-//   if (balanceFactor > 1) {
-//     if (data < node->left->data) {
-//       return rightRotate(node);
-//     } else if (data > node->left->data) {
-//       node->left = leftRotate(node->left);
-//       return rightRotate(node);
-//     }
-//   }
-//   if (balanceFactor < -1) {
-//     if (data > node->right->data) {
-//       return leftRotate(node);
-//     } else if (data < node->right->data) {
-//       node->right = rightRotate(node->right);
-//       return leftRotate(node);
-//     }
-//   }
-//   return node;
-// }
-
-// void    printGivenLevel(t_node *root, int level)
-// {
-//     if (root == NULL)
-//         return;
-//     if (level == 1)
-//         std::cout << root->data << " ";
-//     else if (level > 1)
-//     {
-//         printGivenLevel(root->left, level - 1);
-//         printGivenLevel(root->right, level - 1);
-//     }
-// }
-
-// void    printLevelOrder(t_node *root)
-// {
-//     int h = height(root);
-//     for (int i = 0; i <= h; i++)
-//     {
-//        printGivenLevel(root, i);
-//        std::cout << "\n";
-//     }
-// }
-
-// // --- Returns the node with minimum key value found in that tree
-// t_node* minValueNode(t_node *node)
-// {
-//     t_node* current = node;
-//     while (current && current->left )
-//         current = current->left;
-//     return current;
-// }
-// // --- Delete a data and returns the new root
-
-
-
-// t_node* deleteNode(t_node *root, int data)
-// {
-//     // Find the node and delete it
-//     if (root == NULL)
-//         return root;
-//     if (data < root->data)
-//         root->left = deleteNode(root->left, data);
-//     else if (data > root->data)
-//         root->right = deleteNode(root->right, data);
-//     else {
-//         if ((root->left == NULL) ||
-//         (root->right == NULL)) {
-//         t_node *temp = root->left ? root->left : root->right;
-//         if (temp == NULL) {
-//             temp = root;
-//             root = NULL;
-//         } else
-//             *root = *temp;
-//         free(temp);
-//         } else {
-//         t_node *temp = minValueNode(root->right);
-//         root->data = temp->data;
-//         root->right = deleteNode(root->right,
-//                     temp->data);
-//         }
-//     }
-
-//     if (root == NULL)
-//         return root;
-
-//     // Update the balance factor of each node and
-//     // balance the tree
-//     root->height = 1 + std::ft::max(height(root->left),
-//                 height(root->right));
-//     int balanceFactor = getBalanceFactor(root);
-//     if (balanceFactor > 1) {
-//         if (getBalanceFactor(root->left) >= 0) {
-//         return rightRotate(root);
-//         } else {
-//         root->left = leftRotate(root->left);
-//         return rightRotate(root);
-//         }
-//     }
-//     if (balanceFactor < -1) {
-//         if (getBalanceFactor(root->right) <= 0) {
-//         return leftRotate(root);
-//         } else {
-//         root->right = rightRotate(root->right);
-//         return leftRotate(root);
-//         }
-//     }
-//     return root;
-// }
-
-// // Print the tree
-// void printTree(t_node *root, std::string indent, bool last) {
-//   if (root != nullptr) {
-//     std::cout << indent;
-//     if (last) {
-//       std::cout << "R----";
-//       indent += "   ";
-//     } else {
-//       std::cout << "L----";
-//       indent += "|  ";
-//     }
-//     std::cout << root->data << std::endl;
-//     printTree(root->left, indent, false);
-//     printTree(root->right, indent, true);
-//   }
-// }
-
-// t_node* findMin(t_node* root)
-// {
-//     while (root->left)
-//       root = root->left;
-//     return root;
-// }
-
-// t_node* findMax(t_node* root)
-// {
-//     while (root->right)
-//         root = root->right;
-//     return root;
-// }
-
-
-
-//******** TEMP FUNCTIONS *********//
-// // function to find left most node in a tree
-// t_node* leftMostNode(t_node* node)
-// {
-//     while (node != NULL && node->left != NULL)
-//         node = node->left;
-//     return node;
-// }
-
-// // function to find right most node in a tree
-// t_node* rightMostNode(t_node* node)
-// {
-//     while (node != NULL && node->right != NULL)
-//         node = node->right;
-//     return node;
-// }
-
-// // recursive function to find the Inorder Successor
-// // when the right child of node x is NULL
-// t_node* findInorderRecursive(t_node* root, t_node* x )
-// {
-//     if (!root)
-//         return NULL;
-
-//     if (root==x || (temp = findInorderRecursive(root->left,x)) ||
-//                    (temp = findInorderRecursive(root->right,x)))
-//     {
-//         if (temp)
-//         {
-//             if (root->left == temp)
-//             {
-//                 // std::cout << "Inorder Successor of " << x->data;
-//                 // std::cout << " is "<< root->data << "\n";
-//                 return NULL;
-//             }
-//         }
-
-//         return root;
-//     }
-
-//     return NULL;
-// }
-
-// // function to find inorder successor of
-// // a node
-// t_node* inorderSuccessor(t_node* root, t_node* x)
-// {
-//     // Case1: If right child is not NULL
-//     if (x->right != NULL)
-//     {
-//         t_node* inorderSucc = leftMostNode(x->right);
-//         // std::cout<<"Inorder Successor of "<<x->data<<" is ";
-//         // std::cout<<inorderSucc->data<<"\n";
-//         return (inorderSucc);
-//     }
-
-//     // Case2: If right child is NULL
-//     if (x->right == NULL)
-//     {
-//         t_node* rightMost = rightMostNode(root);
-
-//         // case3: If x is the right most node
-//         if (rightMost == x)
-//             return (NULL);
-//         else
-//             return (findInorderRecursive(root, x));
-//     }
-//     return NULL;
-// }
-
-// // Display elements; inorder traversal of BST  : non-decreasing order.
-// void        inorder(t_node *root)
-// {
-//     if (root)
-//     {
-//         inorder(root->left);
-//         std::cout << root->data << " ";
-//         inorder(root->right);
-//     }
-// }
-
-// // Preorder traversal;  first visits the root node and then traverses the left and the right subtree // for copy !!
-// void        preorder(t_node *root)
-// {
-//     if(root)
-//     {
-//         std::cout << root->data << " ";
-//         preorder(root->left);
-//         preorder(root->right);
-//     }
-// }
-
-// // Postorder traversal ;first traverses the left and the right subtree and then visits the root node. It is used to delete the tree.
-// void       postorder(t_node *root)
-// {
-//     if (root)
-//     {
-//         postorder(root->left);
-//         postorder(root->right);
-//         std::cout << root->data << " ";
-//     }
-// }
-
-// height of the BST
-// The depth of a node in a binary tree is the total number of edges from the root node to the target node
-// int        height(t_node* node)
-// {
-//     if (!node)
-//         return 0;
-//     else
-//     {
-//         // calculate the depth of each subtree
-//         int l_depth = height(node->left);
-//         int r_depth = height(node->right);
-//         // use the larger one
-//         return (std::ft::max(l_depth, r_depth) + 1);
-//     }
-// }
 
 #endif

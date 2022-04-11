@@ -99,6 +99,11 @@ namespace ft
 			*this = x;
 		}
 
+		~map()
+		{
+			erase(begin(), end());
+		}
+
 		// ============================================== //
         // ===============   Operators    =============== //
         // ============================================== //
@@ -187,11 +192,12 @@ namespace ft
 				return (found->data->second);
 			this->_tree._root = this->_tree.insertNode(this->_tree._root, ft::make_pair(k, mapped_type()));	 
 			this->_size++;
+			
 			return (this->_tree.findNode(this->_tree._root, k))->data->second;
 		}
 
 		// ----------------- Element access: : ------------------ //
-		ft::pair<iterator,bool> insert (const value_type& val)
+		ft::pair<iterator,bool> insert (const value_type& val) //Original !!
 		{	
 			// check if key found
 			node_type	*found = this->_tree.findNode(this->_tree._root, val.first); 
@@ -201,8 +207,8 @@ namespace ft
 			this->_tree._root = this->_tree.insertNode(this->_tree._root, val);	 
 			this->_size++;
 			return (ft::make_pair(iterator(this->_tree._root, this->_tree.findNode(this->_tree._root, val.first)), true));
-			// return (ft::make_pair(iterator(this->_tree._root, NULL), true));
 		}
+
 
 		iterator insert (iterator position, const value_type& val)
 		{
@@ -229,16 +235,17 @@ namespace ft
 
 		void erase (iterator position)
 		{
-			this->_tree._root = this->_tree.deleteNode(this->_tree._root, *position);
+			this->_tree._root = this->_tree.deleteNode(this->_tree._root, (*position).first);
 			this->_size--;
 		}
 
-		size_type erase (const key_type& k)
+
+		size_type erase (const key_type& k) //Original
 		{
 			node_type	*found = this->_tree.findNode(this->_tree._root, k);
 			if (!found)
 				return (0);
-			this->_tree._root = this->_tree.deleteNode(this->_tree._root, *(found->data));
+			this->_tree._root = this->_tree.deleteNode(this->_tree._root, k);
 			this->_size--;
 			return (1);
 		}
@@ -254,10 +261,6 @@ namespace ft
 
 		void swap (map& x)
 		{
-			// ft::swap(this->_tree._root , x._tree._root);
-			// ft::swap(this->_tree._current , x._tree._current);
-			// ft::swap(this->_tree._alloc_value , x._tree._alloc_value);
-			// ft::swap(this->_tree._key_comp , x._tree._key_comp);
 			ft::swap(this->_tree , x._tree);
 			ft::swap(this->_size, x._size);
 		}
@@ -322,21 +325,6 @@ namespace ft
 			return (const_iterator(end()));
 		}
 
-		// iterator lower_bound (const key_type& k)
-		// {
-		// 	node_type *first = this->_tree.lowerBound(this->_tree._root, k); //if (key <= first return it) 2 case
-		// 	if (first)
-		// 		return (iterator(this->_tree._root, first));
-		// 	return (iterator(end()));
-		// }
-
-		// const_iterator lower_bound (const key_type& k) const
-		// {
-		// 	node_type *first = this->_tree.lowerBound(this->_tree._root, k); //if (key <= first return it) 2 case
-		// 	if (first)
-		// 		return (const_iterator(this->_tree._root, first));
-		// 	return (const_iterator(end()));
-		// }
 
 		iterator upper_bound (const key_type& k)
 		{
@@ -364,41 +352,6 @@ namespace ft
 			return(Alloc(this->_tree._alloc_value));
 		}
 
-		// pair<const_iterator,const_iterator> equal_range (const key_type& k) const
-		// {
-		// 	key_type lower_key,upper_key = this->_tree.findMax(this->_tree._root)->data->first;
-		// 	this->_tree.findKeysRange(this->_tree._root, k, &lower_key, &upper_key);
-
-		// 	node_type *lower = this->_tree.findNode(this->_tree._root, lower_key);
-		// 	node_type *upper = this->_tree.findNode(this->_tree._root, upper_key);
-
-		// 	// if (!lower && !upper)
-		// 	// 	return(ft::make_pair(end(), end()));
-		// 	// if (lower && !upper)
-		// 	// 	return(ft::make_pair(const_iterator(this->_tree._root, lower), end()));
-		// 	// if (!lower && upper)
-		// 	// 	return(ft::make_pair(end(), const_iterator(this->_tree._root, upper)));
-		// 	return(ft::make_pair(const_iterator(this->_tree._root, lower), const_iterator(this->_tree._root, upper)));
-		// }
-
-		// pair<iterator,iterator>             equal_range (const key_type& k)
-		// {
-		// 	key_type lower_key,upper_key;
-		// 	lower_key = this->_tree.findMax(this->_tree._root)->data->first;
-		// 	upper_key = lower_key;
-		// 	this->_tree.findKeysRange(this->_tree._root, k, &lower_key, &upper_key);
-
-		// 	node_type *lower = this->_tree.findNode(this->_tree._root, lower_key);
-		// 	node_type *upper = this->_tree.findNode(this->_tree._root, upper_key);
-
-		// 	// if (!lower && !upper)
-		// 	// 	return(ft::make_pair(end(), end()));
-		// 	// if (lower && !upper)
-		// 	// 	return(ft::make_pair(iterator(this->_tree._root, lower), end()));
-		// 	// if (!lower && upper)
-		// 	// 	return(ft::make_pair(end(), iterator(this->_tree._root, upper)));
-		// 	return(ft::make_pair(iterator(this->_tree._root, lower), iterator(this->_tree._root, upper)));
-		// }
 
 		pair<const_iterator,const_iterator> equal_range (const key_type& k) const
 		{
@@ -408,15 +361,6 @@ namespace ft
 			upper = lower;
 			this->_tree.findKeysRange(this->_tree._root, k, &lower, &upper);
 
-			// node_type *lower = this->_tree.findNode(this->_tree._root, lower_key);
-			// node_type *upper = this->_tree.findNode(this->_tree._root, upper_key);
-
-			// if (!lower && !upper)
-			// 	return(ft::make_pair(end(), end()));
-			// if (lower && !upper)
-			// 	return(ft::make_pair(const_iterator(this->_tree._root, lower), end()));
-			// if (!lower && upper)
-			// 	return(ft::make_pair(end(), const_iterator(this->_tree._root, upper)));
 			return(ft::make_pair(const_iterator(this->_tree._root, lower), const_iterator(this->_tree._root, upper)));
 		}
 

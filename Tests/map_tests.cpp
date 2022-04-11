@@ -2217,6 +2217,7 @@ void alarm_handler(int seg)
     kill(getpid(), SIGINT);
 }
 
+
 int main()
 {
 
@@ -2267,6 +2268,9 @@ int main()
     std::cout << YELLOW << "Testing Non-Member Swap  ; " << RESET << std::endl;
     TEST_CASE(testNonMemberSwap);
     std::cout << std::endl; //* good
+
+    system ("leaks Containers");
+
     
     return 0;
 }
