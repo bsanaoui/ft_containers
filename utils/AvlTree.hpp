@@ -314,7 +314,6 @@ namespace ft
 					break;
 				}
 				if (!root){
-					// std::cout<< "prec " << prec->data->first<<std::endl;
 					return prec;
 				}
 			}
@@ -373,6 +372,7 @@ namespace ft
 		}
 	}; // class template AvlTree
 } // namespace ft
+
 
 //     void  preorder(node_type *root)
 //     {

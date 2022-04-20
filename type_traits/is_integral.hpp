@@ -26,6 +26,4 @@ namespace ft
 
 } // namespace ft
 
-
-
 #endif

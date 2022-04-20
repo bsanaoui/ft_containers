@@ -137,11 +137,6 @@ namespace ft{
     // ========== Operations Overloading ============ //
     // ============================================== //
 
-    // template <class Key, class T, class Compare, class Alloc>
-    // MapIterator< Key, T, Compare, Alloc> operator+(int n, const MapIterator< Key, T, Compare, Alloc> iter){
-    //     return (iter + n);
-    // }
-
 } // namespace ft
 
 #endif
