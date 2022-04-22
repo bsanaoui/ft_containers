@@ -1,334 +1,355 @@
-#include "map.hpp"
-
 #include <vector>
-#include <iostream>
-#include <iterator>
-#include <utility>
-#include <ctime>
-#include <iomanip>
-#include <unistd.h>
-#include <signal.h>
-#include <sys/time.h>
-#include <random>
 #include <map>
+#include <stack>
+#include "vector.hpp"
+#include "map.hpp"
+#include "stack.hpp"
 
-namespace Color
+template <class T>
+void    display(T first, T last, int i)
 {
-	enum Code {
-		FG_RED      = 31,
-		FG_GREEN    = 32,
-		FG_BLUE     = 36,
-		FG_YELLOW   = 33,
-		FG_DEFAULT  = 39,
-	};
-	class Modifier {
-		Code code;
-	public:
-		Modifier(Code pCode) : code(pCode) {}
-		friend std::ostream&
-		operator<<(std::ostream& os, const Modifier& mod) {
-			return os << "\033[" << mod.code << "m";
-		}
-	};
-}
-
-time_t get_time(void)
-{
-	struct timeval time_now;
-
-	gettimeofday(&time_now, NULL);
-	time_t msecs_time = (time_now.tv_sec * 1e3) + (time_now.tv_usec / 1e3);
-	return(msecs_time);
-}
-
-void	print_time(time_t start, time_t end)
-{
-	Color::Modifier yellow(Color::FG_YELLOW); // right answer
-	Color::Modifier def(Color::FG_DEFAULT);
-	time_t res = end - start;
-	std::cout << std::setw(5) << "\t"<< yellow << res << "msecs " << def ;
-}
-
-int start()
-{
-	Color::Modifier green(Color::FG_GREEN);
-	Color::Modifier blue(Color::FG_BLUE);
-	Color::Modifier yellow(Color::FG_YELLOW); // right answer
-	Color::Modifier red(Color::FG_RED); // false answer
-	Color::Modifier def(Color::FG_DEFAULT);
-	{
-		try
-		{
-			std::cout << blue << "-----------------------------------------------------------" << def << std::endl;
-			std::cout << blue << "------------------------ Map Tests ------------------------" << def << std::endl;
-			std::cout << std::left << std::setw(15) << std::left <<"\nDefault Constructor 			";			
-			{
-				std::map<char, int> m;
-				ft::map<char, int> ft_m;
-
-				//! try to insert elem
-  				m['a'] = 10;
-  				m['b'] = 30;
-  				m['c'] = 50;
-  				m['d'] = 70;
-
-  				ft_m['a'] = 10;
-  				ft_m['b'] = 30;
-  				ft_m['c'] = 50;
-  				ft_m['d'] = 70;
-
-				size_t size, ft_size;
-				size =  m.size();
-				ft_size =  ft_m.size();
-
-				if ((size == ft_size) && (m['b'] == ft_m['b']))
-					std::cout <<"\t\t" << green << "OK" << def << std::endl;
-				else	
-					std::cout << "\t\t" << red << "KO" << def << std::endl;
-			}
-
-			std::cout << std::left << std::setw(15) << std::left <<"Range Constructor 			";
-			{
-				//! fill a map
-				std::map<int, std::string> sm;
-				ft::map<int, std::string> my_m;
-
-				for (size_t i = 0; i < 1e4; i++)
-				{
-					sm.insert(std::make_pair(i, "range"));
-					my_m.insert(ft::make_pair(i, "ft range"));
-				}
-
- 				std::map<int, std::string> m (sm.begin(),sm.end());
- 				ft::map<int, std::string> ft_m (my_m.begin(),my_m.end());
-		
-				std::map<int, int>::iterator it , it_end;
-				ft::map<int, int>::iterator ft_it , ft_it_end;
-
-				size_t size, ft_size;
-				size =  m.size();
-				ft_size =  ft_m.size();
-				if ((size == ft_size) && (m.begin()->first == ft_m.begin()->first) )
-					std::cout <<"\t\t" << green << "OK" << def << std::endl;
-				else	
-					std::cout << "\t\t" << red << "KO" << def << std::endl;
-			}
-
-			std::cout << std::left << std::setw(15) << std::left <<"Assignement  Operator=			";
-			{
-				//! fill a map
-				std::map<int, std::string> sm;
-				ft::map<int, std::string> my_m;
- 				std::map<int, std::string> m;
- 				ft::map<int, std::string> ft_m;
-
-				for (size_t i = 0; i < 1e4; i++)
-				{
-					sm.insert(std::make_pair(i, "std"));
-					my_m.insert(ft::make_pair(i, "ft"));
-				}
-				m = sm;
-				ft_m = my_m;
-				std::map<int, int>::iterator it , it_end;
-				ft::map<int, int>::iterator ft_it , ft_it_end;
-				if ((m.size() == ft_m.size()) && (m.begin()->first == ft_m.begin()->first) )
-					std::cout <<"\t\t" << green << "OK" << def << std::endl;
-				else	
-					std::cout << "\t\t" << red << "KO" << def << std::endl;
-			}
-
-			std::cout << std::left << std::setw(15) << std::left <<"Copy Constructor 			";			
-			{
-				//! fill a map
-				std::map<int, std::string> sm;
-				ft::map<int, std::string> my_m;
-
-				for (size_t i = 0; i < 1e4; i++)
-				{
-					sm.insert(std::make_pair(i, "v"));
-					my_m.insert(ft::make_pair(i, "v"));
-				}
- 				std::map<int, std::string> m (sm.begin(),sm.end());
- 				ft::map<int, std::string> ft_m (my_m.begin(),my_m.end());
-
-				std::map<int, int>::iterator it , it_end;
-				ft::map<int, int>::iterator ft_it , ft_it_end;
-
-				size_t size, ft_size;
-				size =  m.size();
-				ft_size =  ft_m.size();
-				if ((size == ft_size) && (m.begin()->first == ft_m.begin()->first) )
-					std::cout <<"\t\t" << green << "OK" << def << std::endl;
-				else	
-					std::cout << "\t\t" << red << "KO" << def << std::endl;
-			}
-
-			std::cout << std::left << std::setw(15) << std::left <<"Clear  Method 			";			
-			{
-				std::map<int, char> m;
-				ft::map<int, char> ft_m;
-
-				m.clear();
-				ft_m.clear();
-				for (size_t i = 0; i < 50; i++)
-				{
-					m.insert(std::make_pair(i, 'Z'));
-					ft_m.insert(ft::make_pair(i, 'Z'));
-				}
-				m.clear();
-				ft_m.clear();
-				if ((m.size() == ft_m.size()) && (m.empty() == ft_m.empty()))
-					std::cout <<"\t\t\t" << green << "OK" << def << std::endl;
-				else	
-					std::cout << "\t\t\t" << red << "KO" << def << std::endl;
-			}
-
-			std::cout << std::left << std::setw(15) << std::left <<"Empty  Method			";			
-			{
-				std::map<int, char> m;
-				ft::map<int, char> ft_m;
-
-				bool ret = m.empty();
-				bool ft_ret = ft_m.empty();
-				for (size_t i = 0; i < 14; i++)
-				{
-					m.insert(std::make_pair(i, 'Z'));
-					ft_m.insert(ft::make_pair(i, 'Z'));
-				}
-				if ((ret == ft_ret) && (m.empty() == ft_m.empty()))
-					std::cout <<"\t\t\t" << green << "OK" << def << std::endl;
-				else	
-					std::cout << "\t\t\t" << red << "KO" << def << std::endl;
-			}
-
-			std::cout << std::left << std::setw(15) << std::left <<"Find  Method 			";			
-			{
-				std::map<int, char> m;
-				ft::map<int, char> ft_m;
-
-				for (size_t i = 0; i < 1e4; i++)
-				{
-					m.insert(std::make_pair(i, 'Z'));
-					ft_m.insert(ft::make_pair(i, 'Z'));
-				}
-				m[1000] = 'P';
-				ft_m[1000] = 'P';
-				std::map<int,char>::iterator it, p_it;
-				ft::map<int,char>::iterator ft_it , ft_p_it;
-				it = m.find('P'); //! ASCII 80
-				ft_it = ft_m.find('P');
-				p_it = m.find(1000);
-				ft_p_it = ft_m.find(1000);
-				if ((m.size() == ft_m.size()) && (it->second == ft_it->second))
-					std::cout <<"\t\t\t" << green << "OK" << def << std::endl;
-				else	
-					std::cout << "\t\t\t" << red << "KO" << def << std::endl;
-			}
-
-			std::cout << std::left << std::setw(15) << std::left <<"Get_allocator  Method 		";
-			{
-				int psize , ft_psize;
-				std::map<char,int> mymap;
-				ft::map<char,int> ftmap;
-				std::pair<const char,int>* p;
-				ft::pair<const char,int>* ft_p;
-
-				p=mymap.get_allocator().allocate(5);
-				ft_p= ftmap.get_allocator().allocate(5);
-
-				psize = sizeof(std::map<char,int>::value_type)*5;
-				ft_psize = sizeof(ft::map<char,int>::value_type)*5;
-				if (psize == ft_psize)
-					std::cout <<"\t\t\t" << green << "OK" << def << std::endl;
-				else	
-					std::cout << "\t\t\t" << red << "KO" << def << std::endl;
-				delete p;
-				delete ft_p;
-			}
-
-			std::cout << std::left << std::setw(15) << std::left <<"Insert  Method 			";			
-			{
-				std::map<int, int> m;
-				ft::map<int, int> ft_m;
-				
-				for (int i = 0; i < 1000; i++)
-				{
-					m.insert(std::make_pair(i, i));
-					ft_m.insert(ft::make_pair(i, i));
-				}
-				std::map<int, int>::iterator it , it_end;
-				ft::map<int, int>::iterator ft_it , ft_it_end;
-			
-				it = m.begin();
-				it_end = m.end();
-				ft_it = ft_m.begin();
-				ft_it_end = ft_m.end();
-				--it_end;
-				--ft_it_end;
-				if ((it->first == ft_it->first) && (it_end->first == ft_it_end->first) 
-				&& (m.size() == ft_m.size()))
-					std::cout <<"\t\t\t" << green << "OK" << def << std::endl;
-				else	
-					std::cout << "\t\t\t" << red << "KO" << def << std::endl;
-			}
-
-			std::cout << std::left << std::setw(15) << std::left <<"Access  Operator[] 		";
-			{
-				std::map<char, std::string> m;
-				ft::map<char, std::string> ft_m;
-
-				m['a']="an element";
-				m['b']="another element";
-				m['c']= m['b'];
-
-				ft_m['a']="an element";
-				ft_m['b']="another element";
-				ft_m['c']= ft_m['b'];
-				if ((m.size() == ft_m.size()) && (ft_m['a'] == m['a']) && (ft_m['c'] == m['c']))
-					std::cout <<"\t\t\t" << green << "OK" << def << std::endl;
-				else	
-					std::cout << "\t\t\t" << red << "KO" << def << std::endl;
-			}
-			std::cout << std::left << std::setw(15) << std::left <<"Upper Lower Bound Methods	";
-			{
-				std::map<char,int> mymap;
-				std::map<char,int>::iterator itlow,itup;
-
-				mymap['a']=20;
-				mymap['b']=40;
-				mymap['c']=60;
-				mymap['d']=80;
-				mymap['e']=100;
-
-				itlow = mymap.lower_bound ('b');  // itlow points to b
-				itup = mymap.upper_bound ('d');
-				ft::map<char,int> ftmap;
-				ft::map<char,int>::iterator ft_itlow,ft_itup;
-
-				ftmap['a']=20;
-				ftmap['b']=40;
-				ftmap['c']=60;
-				ftmap['d']=80;
-				ftmap['e']=100;
-
-				ft_itlow = ftmap.lower_bound ('b');  // itlow points to b
-				ft_itup = ftmap.upper_bound ('d'); 
-				if (mymap.size() == ftmap.size() && (ft_itlow->second == itlow->second) && (itup->second == ft_itup->second))
-					std::cout <<"\t\t\t" << green << "OK" << def << std::endl;
-				else	
-					std::cout << "\t\t\t" << red << "KO" << def << std::endl;
-			}
-		 } 
-		catch (std::exception &e){
-			std::cout << "Exception Occured" << std::endl;
-		}
-	}
-	return 0;
+    std::cout << "<< ------ Display Map : " << i << " -------->>"<< std::endl;
+    while (first != last)
+    {
+        std::cout << first->first << " => " << first->second << '\n';
+        first++;
+    }
 }
 
 int main()
 {
-	start();
-	system ("leaks Containers");
-	return 1;
+	std::cout << "\n<============================================================================>\n";
+	std::cout << "<============================== Vector Tests ================================>\n";
+	std::cout << "<============================================================================>\n" << std::endl;
+	{
+		{
+			std::cout <<"------------------------- FT swap, capacity, operator dereference  : --------------------------"<<std::endl;
+			ft::vector<int> foo(5, 100);   // three ints with a value of 100
+			ft::vector<int> bar(3, 200);   // five ints with a value of 200
+			ft::vector<int>::iterator it_b(foo.begin());
+			ft::vector<int>::iterator it_b1(bar.begin());
+
+			std::cout << *it_b << std::endl;
+			std::cout << *it_b1 << std::endl;
+			foo.swap(bar);
+			std::cout << *it_b << std::endl;
+			std::cout << *it_b1 << std::endl;
+			std::cout << "foo contains:";
+			for (unsigned i=0; i<foo.size(); i++)
+			std::cout << ' ' << foo[i];
+			std::cout << '\n';
+
+			std::cout << "bar contains:";
+			for (unsigned i=0; i<bar.size(); i++)
+			std::cout << ' ' << bar[i];
+			std::cout << '\n';
+			std::cout << "foo | size = " << foo.size() << ", capacity" << foo.capacity() << std::endl;
+			std::cout << "bar | size = " << bar.size() << ", capacity" << bar.capacity() << std::endl;
+
+		}
+		std::cout << "------------------------- STD swap, capacity, operator dereference  : --------------------------"<<std::endl;
+		{
+			std::vector<int> foo(5, 100);   // three ints with a value of 100
+			std::vector<int> bar(3, 200);   // five ints with a value of 200
+			std::vector<int>::iterator it_b(foo.begin());
+			std::vector<int>::iterator it_b1(bar.begin());
+
+			std::cout << *it_b << std::endl;
+			std::cout << *it_b1 << std::endl;
+			foo.swap(bar);
+			std::cout << *it_b << std::endl;
+			std::cout << *it_b1 << std::endl;
+			std::cout << "foo contains:";
+			for (unsigned i=0; i<foo.size(); i++)
+			std::cout << ' ' << foo[i];
+			std::cout << '\n';
+
+			std::cout << "bar contains:";
+			for (unsigned i=0; i<bar.size(); i++)
+			std::cout << ' ' << bar[i];
+			std::cout << '\n';
+			std::cout << "foo | size = " << foo.size() << ", capacity" << foo.capacity() << std::endl;
+			std::cout << "bar | size = " << bar.size() << ", capacity" << bar.capacity() << std::endl;
+		}
+		std::cout <<"------------------------- FT assign, begin, end, size : --------------------------"<<std::endl;
+		{
+			ft::vector<int> first;
+			ft::vector<int> second;
+			ft::vector<int> third;
+
+			first.assign (7,100);             // 7 ints with a value of 100
+
+			ft::vector<int>::iterator it;
+			it=first.begin()+1;
+
+			second.assign (it,first.end()-1); // the 5 central values of first
+
+			int myints[] = {1776,7,4};
+			third.assign (myints,myints+3);   // assigning from array.
+
+			std::cout << "Size of first: " << int (first.size()) << '\n';
+			std::cout << "Size of second: " << int (second.size()) << '\n';
+			std::cout << "Size of third: " << int (third.size()) << '\n';
+		}
+		std::cout <<"------------------------- STD assign, begin, end, size : --------------------------"<<std::endl;
+		{
+			std::vector<int> first;
+			std::vector<int> second;
+			std::vector<int> third;
+
+			first.assign (7,100);             // 7 ints with a value of 100
+
+			std::vector<int>::iterator it;
+			it=first.begin()+1;
+
+			second.assign (it,first.end()-1); // the 5 central values of first
+
+			int myints[] = {1776,7,4};
+			third.assign (myints,myints+3);   // assigning from array.
+
+			std::cout << "Size of first: " << int (first.size()) << '\n';
+			std::cout << "Size of second: " << int (second.size()) << '\n';
+			std::cout << "Size of third: " << int (third.size()) << '\n';
+		}
+		std::cout <<"------------------------- FT erase, ,push_back, constructor, iterator : : --------------------------"<<std::endl;
+		{
+			ft::vector<int> myvector;
+			// set some values (from 1 to 10)
+			for (int i=1; i<=10; i++) myvector.push_back(i);
+
+			// erase the 6th element
+			myvector.erase (myvector.begin()+5);
+
+			// erase the first 3 elements:
+			myvector.erase (myvector.begin(),myvector.begin()+3);
+
+			std::cout << "myvector contains:";
+			for (unsigned i=0; i<myvector.size(); ++i)
+				std::cout << ' ' << myvector[i];
+			std::cout << '\n';
+		}
+		std::cout <<"------------------------- STD erase, ,push_back, constructor, iterator : --------------------------"<<std::endl;
+		{
+			std::vector<int> myvector;
+			// set some values (from 1 to 10)
+			for (int i=1; i<=10; i++) myvector.push_back(i);
+
+			// erase the 6th element
+			myvector.erase (myvector.begin()+5);
+
+			// erase the first 3 elements:
+			myvector.erase (myvector.begin(),myvector.begin()+3);
+
+			std::cout << "myvector contains:";
+			for (unsigned i=0; i<myvector.size(); ++i)
+				std::cout << ' ' << myvector[i];
+			std::cout << '\n';
+		}
+	}
+
+	std::cout << "\n<============================================================================>\n";
+	std::cout << "<=============================== Stack Tests ================================>\n";
+	std::cout << "<============================================================================>\n" << std::endl;
+	{
+		std::cout <<"------------------------- FT push, empty : --------------------------"<<std::endl;
+		{
+			ft::stack<int> mystack;
+
+			for (int i=0; i<5; ++i) mystack.push(i);
+
+			std::cout << "Popping out elements...";
+			while (!mystack.empty())
+			{
+				std::cout << ' ' << mystack.top();
+				mystack.pop();
+			}
+			std::cout << '\n';
+		}
+		std::cout <<"------------------------- STD push, empty : --------------------------"<< std::endl;
+		{
+			std::stack<int> mystack;
+
+			for (int i=0; i<5; ++i) mystack.push(i);
+
+			std::cout << "Popping out elements...";
+			while (!mystack.empty())
+			{
+				std::cout << ' ' << mystack.top();
+				mystack.pop();
+			}
+			std::cout << '\n';
+		}
+		std::cout <<"------------------------- FT top , size : --------------------------"<<std::endl;
+		{
+			ft::stack<int> mystack;
+
+			mystack.push(10);
+			mystack.push(20);
+
+			mystack.top() -= 5;
+
+			std::cout << "mystack.top() is now " << mystack.top() << '\n';
+		}
+		std::cout <<"------------------------- STD top, size : --------------------------"<< std::endl;
+		{
+			std::stack<int> mystack;
+
+			mystack.push(10);
+			mystack.push(20);
+
+			mystack.top() -= 5;
+
+			std::cout << "mystack.top() is now " << mystack.top() << '\n';
+		}
+	}
+
+	std::cout << "\n<=============================================================================>\n";
+	std::cout << "<================================ Map Tests ==================================>\n";
+	std::cout << "<=============================================================================>\n" << std::endl;
+	{
+		std::cout << "\n|-----------------------------------------------------------|"<<std::endl;
+		std::cout << "|------------------------- FT : ----------------------------|"<<std::endl;
+		std::cout << "|-----------------------------------------------------------|\n"<<std::endl;
+		{
+			ft::pair<int, float> p1(1, 5.8);
+			ft::pair<int, float> p2(2, 20.2);
+			ft::pair<int, float> p3(3, 30.3);
+			ft::pair<int, float> p4(4, 40.4);
+
+			ft::map<int, float> map2;
+			map2.insert(p2);
+			map2.insert(p3);
+			map2.insert(p4);
+
+			std::cout << "  <<  ------------ Reverse : -------------- >>\n" << std::endl;
+			ft::map<int, float>::reverse_iterator r_it = map2.rend();
+			r_it--;
+			std::cout << "Reverse Iterator = " <<(*r_it).first << std::endl;
+
+			std::cout << "  << ------------ Element access : -------- >>\n" << std::endl;
+			map2[2] = 99.5;
+			std::cout << "Map [2] " << map2[7] << std::endl;
+			std::cout << "size() = " << map2.size() << std::endl;
+
+
+			std::cout << "  << -------------- Insert : -------------- >>\n" << std::endl;
+			std::cout << "insert (1,5.8) " << map2.insert(p1).second << std::endl;
+			std::cout << "insert (1,5.8) " << map2.insert(p1).second << std::endl;
+
+			ft::map<int, float> map3;
+			map3.insert(map2.begin(), map2.end());
+			map3.insert(map2.begin()++, map2.end());
+			display(map3.begin(), map3.end(), 3);
+
+			std::cout << "  << ----------------- Erase : ------------ >>" << std::endl;
+			ft::map<char,int> mymap;
+
+			// insert some values:
+			mymap['a']=10;
+			mymap['b']=20;
+			mymap['c']=30;
+			mymap['d']=40;
+			mymap['e']=50;
+			mymap['f']=60;
+
+			ft::map<char, int>::iterator it = mymap.end();
+			mymap.erase ( ++mymap.begin(), --it);    // erasing by range
+		
+			//show content:
+			display(mymap.begin(), mymap.end(), 1);
+
+			std::cout << "  << ----------------- Other : ------------ >>" << std::endl;
+			std::map<char,int> foo,bar;
+			foo['a']=100;
+			foo['b']=200;
+			bar['a']=10;
+			bar['z']=1000;
+
+			// foo ({{a,100},{b,200}}) vs bar ({a,10},{z,1000}}):
+			if (foo==bar) std::cout << "foo and bar are equal\n";
+			if (foo!=bar) std::cout << "foo and bar are not equal\n";
+			if (foo< bar) std::cout << "foo is less than bar\n";
+			if (foo> bar) std::cout << "foo is greater than bar\n";
+			if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+			if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+		
+
+
+		}
+		std::cout << "\n|-----------------------------------------------------------|"<<std::endl;
+		std::cout << "|------------------------- STD : ---------------------------|"<<std::endl;
+		std::cout << "|-----------------------------------------------------------|\n"<<std::endl;
+
+		{
+			std::pair<int, float> p1(1, 5.8);
+			std::pair<int, float> p2(2, 20.2);
+			std::pair<int, float> p3(3, 30.3);
+			std::pair<int, float> p4(4, 40.4);
+
+			std::map<int, float> map2;
+			map2.insert(p2);
+			map2.insert(p3);
+			map2.insert(p4);
+
+			std::cout << "  <<  ------------ Reverse : -------------- >>\n" << std::endl;
+			std::map<int, float>::reverse_iterator r_it = map2.rend();
+			r_it--;
+			std::cout << "Reverse Iterator = " <<(*r_it).first << std::endl;
+
+			std::cout << "  << ------------ Element access : -------- >>\n" << std::endl;
+			map2[2] = 99.5;
+			std::cout << "Map [2] = " << map2[7] << std::endl;
+			std::cout << "size() = " << map2.size() << std::endl;
+
+			std::cout << "  << -------------- Insert : -------------- >>\n" << std::endl;
+			std::cout << "insert (1,5.8) " << map2.insert(p1).second << std::endl;
+			std::cout << "insert (1,5.8) " << map2.insert(p1).second << std::endl;
+
+			std::map<int, float> map3;
+			map3.insert(map2.begin(), map2.end());
+			map3.insert(map2.begin()++, map2.end());
+			display(map3.begin(), map3.end(), 3);
+
+			std::cout << "  << ----------------- Erase : ------------ >>" << std::endl;
+
+			std::map<char,int> mymap;
+
+			// insert some values:
+			mymap['a']=10;
+			mymap['b']=20;
+			mymap['c']=30;
+			mymap['d']=40;
+			mymap['e']=50;
+			mymap['f']=60;
+
+			std::map<char, int>::iterator it = mymap.end();
+			mymap.erase ( ++mymap.begin(), --it);    // erasing by range
+	
+			//show content:
+			display(mymap.begin(), mymap.end(), 1);
+			std::cout << "  << ----------------- Other : ------------ >>" << std::endl;
+
+			std::map<char,int> foo,bar;
+			foo['a']=100;
+			foo['b']=200;
+			bar['a']=10;
+			bar['z']=1000;
+
+			// foo ({{a,100},{b,200}}) vs bar ({a,10},{z,1000}}):
+			if (foo==bar) std::cout << "foo and bar are equal\n";
+			if (foo!=bar) std::cout << "foo and bar are not equal\n";
+			if (foo< bar) std::cout << "foo is less than bar\n";
+			if (foo> bar) std::cout << "foo is greater than bar\n";
+			if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+			if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+
+		}
+	}
+	std::cout << "\n<=============================================================================>\n";
+	std::cout << "<================================ END TESTs ==================================>\n";
+	std::cout << "<=============================================================================>\n" << std::endl;
+
+
+	// system ("leaks Containers");
+	return (0);
 }

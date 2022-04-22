@@ -63,15 +63,6 @@ namespace ft
 
         pointer base() const { return _ptr; }
 
-        bool    operator== (const VectorIterator& iter){
-            if (iter._ptr == this->_ptr)
-                return (true);
-            return (false);
-        }
-
-        bool    operator!= (const VectorIterator& iter){
-            return (!(*this == iter));
-        }
 
         reference    operator* () const { return (*(this->_ptr)); }
 
@@ -120,21 +111,6 @@ namespace ft
             return (this->_ptr - iter._ptr);
         }
 
-        bool            operator<(const VectorIterator& iter){
-            return ( this->_ptr < iter._ptr );
-        }
-
-        bool            operator>(const VectorIterator& iter){
-            return ( this->_ptr > iter._ptr );
-        }
-
-        bool            operator<=(const VectorIterator& iter){
-            return ( !(*this > iter) );
-        }
-
-        bool            operator>=(const VectorIterator& iter){
-            return ( !(*this < iter) );
-        }
 
         VectorIterator&  operator+=(difference_type n){ // Compound assignment operations
             *this = *this + n;
@@ -153,16 +129,48 @@ namespace ft
 
     }; // class VectorIterator
 
-    // ============================================== //
-    // ========== Operations Overloading ============ //
-    // ============================================== //
-
     template <typename T>
     VectorIterator<T> operator+(int n, const VectorIterator<T> iter){
         return (iter + n);
     }
+
+    // ============================================== //
+    // ========== Operations Overloading ============ //
+    // ============================================== //
+
+
+    template <typename T, typename T2>
+    bool    operator== (const VectorIterator<T>& lhs, const VectorIterator<T2>& rhs){
+        if (lhs.base() == rhs.base())
+            return (true);
+        return (false);
+    }
+
+    template <typename T, typename T2>
+    bool    operator!= (const VectorIterator<T>& lhs, const VectorIterator<T2>& rhs){
+        return (!(lhs == rhs));
+    }
+
+    template <typename T, typename T2>
+    bool    operator< (const VectorIterator<T>& lhs, const VectorIterator<T2>& rhs){
+        return ( lhs.base() < rhs.base());
+    }
+
+    template <typename T, typename T2>
+    bool    operator> (const VectorIterator<T>& lhs, const VectorIterator<T2>& rhs){
+        return ( lhs.base() > rhs.base());
+    }
+
+    template <typename T, typename T2>
+    bool    operator<= (const VectorIterator<T>& lhs, const VectorIterator<T2>& rhs){
+        return ( !(lhs > rhs) );
+    }
+
+    template <typename T, typename T2>
+    bool    operator>= (const VectorIterator<T>& lhs, const VectorIterator<T2>& rhs){
+         return ( !(lhs < rhs) );
+    }
+
 } // namespace 'ft'
 
 #endif
-
-

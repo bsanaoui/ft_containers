@@ -23,16 +23,15 @@ namespace ft
 		// ========= Member Types =========== //
 		// ================================== //
 	public:
-		typedef Key 									key_type;
-		typedef T 										mapped_type;
-		typedef Compare 								key_compare;
-		typedef Alloc 									allocator_value_type;
+		typedef Key 																key_type;
+		typedef T 																	mapped_type;
+		typedef Compare 															key_compare;
+		typedef Alloc 																allocator_value_type;
 
-		typedef ft::pair<const key_type, mapped_type> 	value_type;
-		typedef ft::node<value_type> 					node_type;
-		typedef std::allocator<node_type> 				allocator_node_type;
-		typedef size_t                                  size_type;
-
+		typedef ft::pair<const key_type, mapped_type> 								value_type;
+		typedef ft::node<value_type> 												node_type;
+		typedef std::allocator<node_type> 											allocator_node_type;
+		typedef size_t                                  							size_type;
 
 		// ============================================== //
 		// ========= Member Private Attributs =========== //
@@ -59,14 +58,9 @@ namespace ft
 		{
 			this->_root = tree._root;
 			this->_current = tree._current;
-			// this->_alloc_value = tree._alloc_value;
-			// this->_key_comp = tree._key_comp;
+			this->_alloc_value = tree._alloc_value;
+			this->_key_comp = tree._key_comp;
 			return (*this);
-		}
-
-		~AvlTree()
-		{
-			// this->_alloc_node.deallocate(this->_root, 1);
 		}
 
 		bool  operator==(AvlTree const& tree) const{
@@ -81,6 +75,7 @@ namespace ft
 		// ===========   Member/ Non Member Functions    ============ //
 		// ========================================================= //
 
+		private :
 		// Calculate height fast
 		int height(node_type *N)
 		{
@@ -121,6 +116,20 @@ namespace ft
 			return height(N->left) - height(N->right);
 		}
 
+		// Create new node
+		node_type *newNode(const value_type &val)
+		{
+			node_type *ptr;
+			ptr = this->_alloc_node.allocate(1);
+			ptr->left = NULL;
+			ptr->right = NULL;
+			ptr->data = this->_alloc_value.allocate(1);
+			this->_alloc_value.construct(ptr->data, val);
+			ptr->height = 1;
+			return ptr;
+		}
+
+		public :
 		node_type *findMin(node_type *root) const
 		{
 			while (root && root->left)
@@ -135,18 +144,6 @@ namespace ft
 			return root;
 		}
 
-		// Create new node
-		node_type *newNode(const value_type &val)
-		{
-			node_type *ptr;
-			ptr = this->_alloc_node.allocate(1);
-			ptr->left = NULL;
-			ptr->right = NULL;
-			ptr->data = this->_alloc_value.allocate(1);
-			this->_alloc_value.construct(ptr->data, val);
-			ptr->height = 1;
-			return ptr;
-		}
 
 		// Insert new node in the avl tree
 		node_type *insertNode(node_type *node, const value_type &val)
@@ -347,7 +344,6 @@ namespace ft
 					findKeysRange(root->left, key, lower, upper);
 			}
 		}
-		
 
 		// Print the balanced tree
 		static void printTree(node_type *root, std::string indent, bool last)

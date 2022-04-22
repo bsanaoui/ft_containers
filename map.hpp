@@ -11,7 +11,6 @@
 #include "utils/pair.hpp"
 #include "utils/make_pair.hpp"
 #include "vector.hpp"
-// #include "utils/value_compare.hpp"
 #include "algorithm/equal.hpp"
 #include "algorithm/lexicographical_compare.hpp"
 
@@ -39,7 +38,7 @@ namespace ft
 		typedef Compare                                                                             key_compare;
 		typedef	class value_compare : public std::binary_function<value_type, value_type, bool>
 		{
-			friend class map; //?
+			friend class map;
 			protected:
 				Compare comp;
   				value_compare (Compare c) : comp(c) {}

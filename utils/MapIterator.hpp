@@ -131,11 +131,29 @@ namespace ft{
                 iter--;
             return (iter);
         }
+
+        tree_type base() { return (this->_tree); };
+
     }; // class template MapIterator
 
     // ============================================== //
     // ========== Operations Overloading ============ //
     // ============================================== //
+   
+    template < typename Key, typename T1, typename T2 >
+    bool    operator==(MapIterator<Key, T1> const& lhs, MapIterator<Key, T2> const& rhs) {
+        if (lhs.base() == rhs.base())
+            return (true);
+        return (false);
+    }
+
+
+    template < typename Key, typename T1, typename T2 >
+    bool    operator!=(MapIterator<Key, T1> const& lhs, MapIterator<Key, T2> const& rhs) {
+        if (!(lhs == rhs))
+            return (true);
+        return (false);
+    }
 
 } // namespace ft
 
